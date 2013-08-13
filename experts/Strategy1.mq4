@@ -16,7 +16,7 @@ extern double OSFollowStopLevel   =  8.760;
 extern double GMTOffset           =  9.0;
 extern double WeekendMarginSecs   = 5;
 extern string OrderParameters     = "==== Order parameters ====";
-extern double OptimalF            = 0.3103;
+extern double OptimalF            = 0.3246;
 extern double WorstLoss           = -7200;
 extern double Lots                = 0.0;
 extern int    MagicNumber         = 1;
