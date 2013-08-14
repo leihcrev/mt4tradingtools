@@ -28,10 +28,11 @@ double   overshootLevel[100];
 double   extremaPrice[100];
 double   dcPrice[100];
 bool     isInitialized = false;
+double   thresholdContribution[100];
 
 // Buffers
 double Upper[];
-double Center[];
+double Forecast[];
 double Lower[];
 double ThresholdBuffer[];
 double ModeBuffer[];
@@ -47,8 +48,8 @@ int init() {
   SetIndexLabel(0, "Upper");
   SetIndexBuffer(0, Upper);
   SetIndexShift(0, 101);
-  SetIndexLabel(1, "Center");
-  SetIndexBuffer(1, Center);
+  SetIndexLabel(1, "Forecast");
+  SetIndexBuffer(1, Forecast);
   SetIndexShift(1, 101);
   SetIndexLabel(2, "Lower");
   SetIndexBuffer(2, Lower);
@@ -75,8 +76,13 @@ int init() {
   SetIndexShift(7, 101);
   SetIndexStyle(7, DRAW_NONE);
 
+  double cb = 0.0;
+  for (int i = 1; i <= 100; i++) {
+    cb += MathSqrt(i);
+  }
   for (int th = 0; th < 100; th++) {
     threshold[th] = thresholdTick * (th + 1);
+    thresholdContribution[th] = 1.0;
   }
 
   return(0);
@@ -199,17 +205,17 @@ int start() {
       ModeBuffer[idx] = -1;
     }
     if (th == 0) {
-      Center[idx] = (Upper[idx] + Lower[idx]) / 2.0;
+      Forecast[idx] = (Upper[idx] + Lower[idx]) / 2.0;
     }
     else {
-      Center[idx] = Center[idx + 1] + (Upper[idx] + Lower[idx]) / 2.0 - Bid;
+      Forecast[idx] = Forecast[idx + 1] + ((Upper[idx] + Lower[idx]) / 2.0 - Bid) * thresholdContribution[th];
     }
   }
   Upper[0] = EMPTY_VALUE;
-  Center[0] = EMPTY_VALUE;
+  Forecast[0] = EMPTY_VALUE;
   Lower[0] = EMPTY_VALUE;
   Upper[101] = EMPTY_VALUE;
-  Center[101] = EMPTY_VALUE;
+  Forecast[101] = EMPTY_VALUE;
   Lower[101] = EMPTY_VALUE;
 
   return(0);
