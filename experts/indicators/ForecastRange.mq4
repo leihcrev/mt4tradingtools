@@ -19,7 +19,7 @@
 #include <OvershootECDF.mqh>
 
 // Input parameters
-extern double thresholdTick = 0.00005;
+extern double thresholdTick = 0.0001;
 
 // Variables
 double   threshold[100];
@@ -186,44 +186,48 @@ int start() {
     }
 
     // Update buffers
-    double sp = (Ask - Bid) / 2.0;
     double price = x;
     int m = mode[th];
+    double dc = dcPrice[th];
     double ext = extremaPrice[th];
     double cl = currentLevel;
     double osl = overshootLevel[th];
     int idx = 100 - th;
     if (th != 0) {
-      price = Forecast[idx + 1];
-      if (m == -1) {
-        if (price < extremaPrice[th]) {
-          ext = price;
-        }
-        if ((price - ext) / ext >= threshold[th]) {
-          m = 1;
-          cl = (price - ext) / ext / threshold[th] - 1.0;
-          osl = cl;
-        }
-        else {
-          cl = (dcPrice[th] - price) / dcPrice[th] / threshold[th];
-          if (osl < cl) {
+      for (int th2 = 0; th2 < th; th2++) {
+        price = Forecast[100 - th2];
+        if (m == -1) {
+          if (price < extremaPrice[th]) {
+            ext = price;
+          }
+          if ((price - ext) / ext >= threshold[th]) {
+            m = 1;
+            dc = ext * (1.0 + threshold[th]);
+            cl = (price - ext) / ext / threshold[th] - 1.0;
             osl = cl;
           }
-        }
-      }
-      else {
-        if (price > ext) {
-          ext = price;
-        }
-        if ((price - ext) / ext <= -threshold[th]) {
-          m = -1;
-          cl = (ext - price) / ext / threshold[th] - 1.0;
-          osl = cl;
+          else {
+            cl = (dc - price) / dc / threshold[th];
+            if (osl < cl) {
+              osl = cl;
+            }
+          }
         }
         else {
-          cl = (price - dcPrice[th]) / dcPrice[th] / threshold[th];
-          if (osl < cl) {
+          if (price > ext) {
+            ext = price;
+          }
+          if ((price - ext) / ext <= -threshold[th]) {
+            m = -1;
+            dc = ext * (1.0 - threshold[th]);
+            cl = (ext - price) / ext / threshold[th] - 1.0;
             osl = cl;
+          }
+          else {
+            cl = (price - dc) / dc / threshold[th];
+            if (osl < cl) {
+              osl = cl;
+            }
           }
         }
       }
@@ -235,13 +239,13 @@ int start() {
     double DCDistance = price * threshold[th] * DCDistanceBuffer[idx];
     double OSDistance = price * threshold[th] * OSDistanceBuffer[idx];
     if (m == 1) {
-      Upper[idx] = price + OSDistance - sp;
-      Lower[idx] = price - DCDistance - sp;
+      Upper[idx] = price + OSDistance;
+      Lower[idx] = price - DCDistance;
       ModeBuffer[idx] = 1;
     }
     else {
-      Upper[idx] = price + DCDistance - sp;
-      Lower[idx] = price - OSDistance - sp;
+      Upper[idx] = price + DCDistance;
+      Lower[idx] = price - OSDistance;
       ModeBuffer[idx] = -1;
     }
     Forecast[idx] = MathSqrt(Upper[idx] * Lower[idx]);
