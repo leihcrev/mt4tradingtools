@@ -29,34 +29,55 @@ int init() {
 
 int deinit() {
   int level;
-  string row;
 
-  int handle = FileOpen("OvershootECDF_" + Symbol() + ".csv", FILE_WRITE);
+  int handle = FileOpen("OvershootECDF_" + Symbol() + ".dat", FILE_WRITE | FILE_BIN);
+  FileWriteInteger(handle, THRESHOLDS);
+  FileWriteDouble(handle, THRESHOLD_TICK);
+  FileWriteInteger(handle, LEVELS);
+  FileWriteDouble(handle, LEVEL_TICK);
 
-  row = "\"threshold-level\"";
-  for (level = 0; level < LEVELS; level++) {
-    row = row + "," + DoubleToStr(level * LEVEL_TICK, -MathFloor(MathLog(LEVEL_TICK) / MathLog(10.0)));
-  }
-  FileWrite(handle, row);
-
+  double idealp = 1.0 - 1.0 / MathExp(1.0);
   double cumsumscore;
+  double ecdf[LEVELS];
   for (int th = 0; th < THRESHOLDS; th++) {
     cumsumscore = 0.0;
-    row = DoubleToStr(threshold[th], -MathFloor(MathLog(THRESHOLD_TICK) / MathLog(10.0)));
     for (level = 0; level < LEVELS; level++) {
-      int s = score[th][level];
-      if (s == 0) {
-        row = row + ",";
+      cumsumscore += score[th][level];
+      ecdf[level] = cumsumscore / total[th];
+      FileWriteDouble(handle, ecdf[level]);
+    }
+    
+    for (level = 0; level < LEVELS; level++) {
+      double basep = ecdf[level];
+      if (basep == 1.0) {
+        FileWriteDouble(handle, level * LEVEL_TICK + 1.0);
         continue;
       }
-      cumsumscore += s;
-      row = row + "," + (cumsumscore / total[th]);
-      if (cumsumscore == total[th]) {
-        break;
+      int targetLevel = level + (1.0 / LEVEL_TICK);
+      if (targetLevel >= LEVELS) {
+        targetLevel = LEVELS - 1;
       }
+      double targetp = ecdf[targetLevel];
+      if ((targetp - basep) / (1.0 - basep) < idealp) {
+        while ((targetp - basep) / (1.0 - basep) < idealp) {
+          targetLevel++;
+          if (targetLevel >= LEVELS) {
+            break;
+          }
+          targetp = ecdf[targetLevel];
+        }
+      }
+      else {
+        while ((targetp - basep) / (1.0 - basep) > idealp) {
+          targetLevel--;
+          if (targetLevel <= 0) {
+            break;
+          }
+          targetp = ecdf[targetLevel];
+        }
+      }
+      FileWriteDouble(handle, targetLevel * LEVEL_TICK);
     }
-    FileWrite(handle, row);
-    FileFlush(handle);
   }
 
   FileClose(handle);
