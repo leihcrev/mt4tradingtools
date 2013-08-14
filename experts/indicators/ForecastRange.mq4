@@ -187,29 +187,64 @@ int start() {
 
     // Update buffers
     double sp = (Ask - Bid) / 2.0;
+    double price = x;
+    int m = mode[th];
+    double ext = extremaPrice[th];
+    double cl = currentLevel;
+    double osl = overshootLevel[th];
     int idx = 100 - th;
+    if (th != 0) {
+      price = Forecast[idx + 1];
+      if (m == -1) {
+        if (price < extremaPrice[th]) {
+          ext = price;
+        }
+        if ((price - ext) / ext >= threshold[th]) {
+          m = 1;
+          cl = (price - ext) / ext / threshold[th] - 1.0;
+          osl = cl;
+        }
+        else {
+          cl = (dcPrice[th] - price) / dcPrice[th] / threshold[th];
+          if (osl < cl) {
+            osl = cl;
+          }
+        }
+      }
+      else {
+        if (price > ext) {
+          ext = price;
+        }
+        if ((price - ext) / ext <= -threshold[th]) {
+          m = -1;
+          cl = (ext - price) / ext / threshold[th] - 1.0;
+          osl = cl;
+        }
+        else {
+          cl = (price - dcPrice[th]) / dcPrice[th] / threshold[th];
+          if (osl < cl) {
+            osl = cl;
+          }
+        }
+      }
+    }
     ThresholdBuffer[idx] = threshold[th];
-    OSLevelBuffer[idx] = currentLevel;
-    DCDistanceBuffer[idx] = 1.0 + currentLevel - overshootLevel[th];
-    OSDistanceBuffer[idx] = DCDistanceBuffer[idx] * (GetEvenOvershootLevel(Symbol(), threshold[th], overshootLevel[th]) - overshootLevel[th]);
-    double DCDistance = x * threshold[th] * DCDistanceBuffer[idx];
-    double OSDistance = x * threshold[th] * OSDistanceBuffer[idx];
-    if (mode[th] == 1) {
-      Upper[idx] = x + OSDistance - sp;
-      Lower[idx] = x - DCDistance - sp;
+    OSLevelBuffer[idx] = cl;
+    DCDistanceBuffer[idx] = 1.0 + cl - osl;
+    OSDistanceBuffer[idx] = DCDistanceBuffer[idx] * (GetEvenOvershootLevel(Symbol(), threshold[th], osl) - osl);
+    double DCDistance = price * threshold[th] * DCDistanceBuffer[idx];
+    double OSDistance = price * threshold[th] * OSDistanceBuffer[idx];
+    if (m == 1) {
+      Upper[idx] = price + OSDistance - sp;
+      Lower[idx] = price - DCDistance - sp;
       ModeBuffer[idx] = 1;
     }
     else {
-      Upper[idx] = x + DCDistance - sp;
-      Lower[idx] = x - OSDistance - sp;
+      Upper[idx] = price + DCDistance - sp;
+      Lower[idx] = price - OSDistance - sp;
       ModeBuffer[idx] = -1;
     }
-    if (th == 0) {
-      Forecast[idx] = (Upper[idx] + Lower[idx]) / 2.0;
-    }
-    else {
-      Forecast[idx] = Forecast[idx + 1] + ((Upper[idx] + Lower[idx]) / 2.0 - Bid) * thresholdContribution[th];
-    }
+    Forecast[idx] = MathSqrt(Upper[idx] * Lower[idx]);
   }
   Upper[0] = EMPTY_VALUE;
   Forecast[0] = EMPTY_VALUE;
