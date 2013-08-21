@@ -89,6 +89,22 @@ void OvershootECDF_Read(string filename, double &level[], int &count[]) {
   FileClose(handle);
 }
 
+void OvershootECDF_MultiRead(string symbol, double thresholds[], int &index[], double &level[], int &count[]) {
+  int n = ArraySize(thresholds);
+  ArrayResize(index, n);
+  int idx = 0;
+  for (int i = 0; i < n; i++) {
+    string filename = StringConcatenate("OvershootECDF_", symbol, "_", DoubleToStr(thresholds[i], 6));
+    double l[0];
+    int c[0];
+    OvershootECDF_Read(filename, l , c);
+    ArrayCopy(level, l, idx);
+    ArrayCopy(count, c, idx);
+    idx += ArraySize(c);
+    index[i] = idx;
+  }
+}
+
 double OvershootECDF_Refer(double &level[], int &count[], double overshootLevel) {
   int size = ArraySize(count);
   double total = count[size - 1];
@@ -102,6 +118,39 @@ double OvershootECDF_Refer(double &level[], int &count[], double overshootLevel)
   else {
     int i = ArrayBsearch(level, overshootLevel);
     if (i == size - 1) {
+      return(1.0);
+    }
+    x1 = level[i];
+    y1 = count[i] / total;
+    if (x1 == overshootLevel) {
+      return(y1);
+    }
+    x2 = level[i + 1];
+    y2 = count[i + 1] / total;
+  }
+  return((overshootLevel - x1) / (x2 - x1) * (y2 - y1) + y1);
+}
+
+double OvershootECDF_MultiRefer(int thresholdIndex, int &index[], double &level[], int &count[], double overshootLevel) {
+  int to = index[thresholdIndex];
+  int from;
+  if (thresholdIndex == 0) {
+    from = 0;
+  }
+  else {
+    from = index[thresholdIndex - 1];
+  }
+  double total = count[to - 1];
+  double x1, x2, y1, y2;
+  if (overshootLevel < level[from]) {
+    x1 = 0.0;
+    y1 = 0.0;
+    x2 = level[from];
+    y2 = count[from] / total;
+  }
+  else {
+    int i = ArrayBsearch(level, overshootLevel, to - from, from);
+    if (i >= to - 1) {
       return(1.0);
     }
     x1 = level[i];
@@ -130,6 +179,40 @@ double OvershootECDF_ReverseRefer(double &level[], int &count[], double p) {
     int i = ArrayBsearch(count, c);
     if (i == size - 1) {
       return(level[size - 1]);
+    }
+    x1 = count[i];
+    y1 = level[i];
+    if (x1 == c) {
+      return(y1);
+    }
+    x2 = count[i + 1];
+    y2 = level[i + 1];
+  }
+  return((c - x1) / (x2 - x1) * (y2 - y1) + y1);
+}
+
+double OvershootECDF_MultiReverseRefer(int thresholdIndex, int &index[], double &level[], int &count[], double p) {
+  int to = index[thresholdIndex];
+  int from;
+  if (thresholdIndex == 0) {
+    from = 0;
+  }
+  else {
+    from = index[thresholdIndex - 1];
+  }
+  double total = count[to - 1];
+  double c = total * p;
+  double x1, x2, y1, y2;
+  if (c < count[from]) {
+    x1 = 0.0;
+    y1 = 0.0;
+    x2 = count[from];
+    y2 = level[from];
+  }
+  else {
+    int i = ArrayBsearch(count, c, to - from, from);
+    if (i >= to - 1) {
+      return(level[to - 1]);
     }
     x1 = count[i];
     y1 = level[i];
