@@ -5,18 +5,20 @@
 #property indicator_separate_window
 #property indicator_buffers 3
 
-#property indicator_maximum  0.1
-#property indicator_minimum -0.1
-
-#property indicator_color1 White
-#property indicator_width1 1
+#property indicator_color1 Lime
+#property indicator_width1 2
+#property indicator_color2 Red
+#property indicator_width2 2
+#property indicator_color3 White
+#property indicator_width3 1
 
 #include <IndicatorUtils.mqh>
 #include <OvershootECDF.mqh>
 
 // Input parameters
-extern double ThresholdTick   = 0.00005;
-extern int    Thresholds      = 100;
+extern double ThresholdStart  = 0.00010;
+extern double ThresholdTick   = 0.00001;
+extern int    Thresholds      = 50;
 extern int    MaxBars         = 28800;
 
 // Variables
@@ -39,9 +41,9 @@ int      reliables = 0.0;
 double   ReverseNapier;
 
 // Buffers
+double UpwardSkewness[];
+double DownwardSkewness[];
 double Skewness[];
-double Accuracy[];
-double Continuity[];
 
 int init() {
   ArrayResize(threshold, Thresholds);
@@ -57,17 +59,20 @@ int init() {
 
   IndicatorDigits(8);
 
-  SetIndexLabel(0, "Skewness");
-  SetIndexBuffer(0, Skewness);
-  SetIndexLabel(1, "Accuracy");
-  SetIndexBuffer(1, Accuracy);
-  SetIndexStyle(1, DRAW_NONE);
-  SetIndexLabel(2, "Continuity");
-  SetIndexBuffer(2, Continuity);
-  SetIndexStyle(2, DRAW_NONE);
+  SetIndexLabel(0, "UpwardSkewness");
+  SetIndexBuffer(0, UpwardSkewness);
+  SetIndexStyle(0, DRAW_HISTOGRAM);
+  SetIndexLabel(1, "DownwardSkewness");
+  SetIndexBuffer(1, DownwardSkewness);
+  SetIndexStyle(1, DRAW_HISTOGRAM);
+  SetIndexLabel(2, "Skewness");
+  SetIndexBuffer(2, Skewness);
+
+  SetLevelValue(0, 1);
+  SetLevelValue(1, -1);
 
   for (int th = 0; th < Thresholds; th++) {
-    threshold[th] = ThresholdTick * (th + 1);
+    threshold[th] = ThresholdStart + ThresholdTick * th;
   }
 
   OvershootECDF_MultiRead(Symbol(), threshold, index, level, count);
@@ -86,8 +91,6 @@ int start() {
 
   if (!isInitialized) {
     isInitialized = true;
-    SetLevelValue(0, spread);
-    SetLevelValue(1, -spread);
     for (int th = 0; th < Thresholds; th++) {
       mode[th] = 0;
       overshootLevel[th] = 0.0;
@@ -101,13 +104,13 @@ int start() {
       for (int j = 0; j < 4; j++) {
         UpdateDCOS(prices[j]);
       }
-      UpdateBuffer(i, Close[i], spread);
+      UpdateBuffers(i, prices[3], spread);
     }
   }
 
   double x = (Bid + Ask) / 2.0;
   UpdateDCOS(x);
-  UpdateBuffer(0, x, spread);
+  UpdateBuffers(0, x, spread);
 
   return(0);
 }
@@ -135,9 +138,9 @@ void UpdateDCOS(double x) {
       }
       if ((x - extremaPrice[th]) / extremaPrice[th] >= threshold[th]) {
         mode[th] = 1;
+        dcPrice[th] = extremaPrice[th] * (1.0 + threshold[th]);
         extremaPrice[th] = x;
-        dcPrice[th] = x;
-        currentLevel = 0.0;
+        currentLevel = (x - dcPrice[th]) / dcPrice[th] / threshold[th];
         overshootLevel[th] = currentLevel;
         if (!reliable[th]) {
           reliable[th] = true;
@@ -159,9 +162,9 @@ void UpdateDCOS(double x) {
       }
       if ((x - extremaPrice[th]) / extremaPrice[th] <= -threshold[th]) {
         mode[th] = -1;
+        dcPrice[th] = extremaPrice[th] * (1.0 - threshold[th]);
         extremaPrice[th] = x;
-        dcPrice[th] = x;
-        currentLevel = 0.0;
+        currentLevel = (dcPrice[th] - x) / dcPrice[th] / threshold[th];
         overshootLevel[th] = currentLevel;
         if (!reliable[th]) {
           reliable[th] = true;
@@ -193,37 +196,115 @@ double GetEvenOvershootLevel(int th) {
   return(OvershootECDF_MultiReverseRefer(th, index, level, count, 1.0 - (1.0 - p) * ReverseNapier));
 }
 
-void UpdateBuffer(int i, double x, double spread) {
-  int updown = 0;
-  Skewness[i] = 0;
+void UpdateBuffers(int i, double x, double spread) {
+  double hiext = 0.0, loext = 0.0;
+  double upReward = 0.0, downRisk = 0.0;
+  double downReward = 0.0, upRisk = 0.0;
+  double s = 0.0;
+
   for (int th = 0; th < Thresholds; th++) {
-    if (x * threshold[th] < spread) {
-      continue;
+    s += skewness[th] * x / spread * threshold[th];
+    if (s > hiext) {
+      hiext = s;
     }
-    if (updown > 0) {
-      if (skewness[th] < 0.0) {
-        break;
+    if (s < loext) {
+      loext = s;
+    }
+    if (loext > -1.0) {
+      if (s + downReward > upReward + downRisk) {
+        upReward = s;
+        downRisk = loext;
+      }
+    } 
+    if (hiext < 1.0) {
+      if (s + upReward < downReward + upRisk) {
+        downReward = s;
+        downRisk = hiext;
       }
     }
-    else if (updown < 0.0) {
-      if (skewness[th] > 0.0) {
-        break;
-      }
-    }
-    else {
-      if (skewness[th] > 0.0) {
-        updown = 1;
-      }
-      else if (skewness[th] < 0.0) {
-        updown = -1;
-      }
-    }
-    double s = skewness[th] * threshold[th] * x;
-    if (updown * s > updown * Skewness[i]) {
-      Skewness[i] = s;
+    if (loext < -1.0 && hiext > 1.0) {
+      break;
     }
   }
-  Accuracy[i] = 100.0 * reliables / Thresholds;
-  Continuity[i] = th;
+  UpwardSkewness[i] = MathMax(0, upReward + downRisk);
+  DownwardSkewness[i] = MathMin(0, downReward + upRisk);
+  Skewness[i] = (upReward + downRisk) + (downReward + upRisk);
+
+/*
+  double upReward = 0.0, downRisk = 0.0;
+  double downReward = 0.0, upRisk = 0.0;
+  int upLength = 1, downLength = 1;
+
+  double s = 0.0;
+  for (int th = 0; th < Thresholds; th++) {
+    s += skewness[th] * threshold[th];
+    if (s + downReward > upReward + downRisk) {
+      upReward = s;
+      downRisk = downReward;
+      upLength = th + 1;
+    }
+    if (s + upReward < downReward + upRisk) {
+      downReward = s;
+      upRisk = upReward;
+      downLength = th + 1;
+    }
+  }
+  UpwardSkewness[i] = x / spread * MathMax(0, upReward + downRisk) / upLength;
+  DownwardSkewness[i] = x / spread * MathMin(0, downReward + upRisk) / downLength;
+  Skewness[i] = x / spread * ((upReward + downRisk) / upLength + (downReward + upRisk) / downLength);
+*/
+
+/*
+  double risk, reward, s;
+  int th;
+
+  Skewness[i] = 0;
+
+  risk = 0;
+  reward = 0;
+  for (th = 0; th < Thresholds; th++) {
+    s = skewness[th];
+    if (s < risk) {
+      risk = s;
+    }
+    if (risk * threshold[th] < -spread) {
+      break;
+    }
+    if (s > reward) {
+      reward = s;
+    }
+  }
+  if (reward == 0.0) {
+    UpwardSkewness[i] = 0.0;
+  }
+  else {
+    reward = reward * threshold[th];
+    UpwardSkewness[i] = MathMax(0, reward);
+    Skewness[i] += reward;
+  }
+
+  risk = 0;
+  reward = 0;
+  for (th = 0; th < Thresholds; th++) {
+    s = skewness[th];
+    if (s > risk) {
+      risk = s;
+    }
+    if (risk * threshold[th] > spread) {
+      break;
+    }
+    if (s < reward) {
+      reward = s;
+    }
+  }
+  if (reward == 0.0) {
+    DownwardSkewness[i] = 0.0;
+  }
+  else {
+    reward = reward * threshold[th];
+    DownwardSkewness[i] = MathMin(0, reward);
+    Skewness[i] += reward;
+  }
+*/
 }
 
