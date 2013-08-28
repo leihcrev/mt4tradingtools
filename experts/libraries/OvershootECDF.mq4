@@ -2,14 +2,11 @@
 #property copyright "Copyright 2013 KIKUCHI Shunsuke"
 #property library
 
-void OvershootECDF_CountUp(double &level[], int &count[], double overshootLevel) {
-  int size = ArraySize(count);
-  if (size == 0) {
-    ArrayResize(level, 1);
-    ArrayResize(count, 1);
+int OvershootECDF_CountUp(double &level[], int &count[], int elements, double overshootLevel) {
+  if (elements == 0) {
     level[0] = overshootLevel;
     count[0] = 1;
-    return;
+    return(1);
   }
 
   int i;
@@ -17,37 +14,40 @@ void OvershootECDF_CountUp(double &level[], int &count[], double overshootLevel)
     i = -1;
   }
   else {
-    i = ArrayBsearch(level, overshootLevel);
+    i = ArrayBsearch(level, overshootLevel, elements, 0);
     if (level[i] == overshootLevel) {
       count[i]++;
-      return;
+      return(elements);
     }
   }
 
-  if (i == size - 1) {
-    ArrayResize(level, size + 1);
-    ArrayResize(count, size + 1);
+  int size = ArraySize(count);
+  if (size <= elements) {
+    int newsize = size * 2;
+    ArrayResize(level, newsize);
+    ArrayResize(count, newsize);
   }
-  else {
-    ArrayCopy(level, level, i + 2, i + 1);
-    ArrayCopy(count, count, i + 2, i + 1);
+  if (i != elements - 1) {
+    ArrayCopy(level, level, i + 2, i + 1, elements - i - 1);
+    ArrayCopy(count, count, i + 2, i + 1, elements - i - 1);
   }
+
   level[i + 1] = overshootLevel;
   count[i + 1] = 1;
+  return(elements + 1);
 }
 
-void OvershootECDF_Write(string filename, double &level[], int &count[]) {
-  int handle = FileOpen(filename + ".dat", FILE_BIN | FILE_WRITE);
+void OvershootECDF_Write(string symbol, double threshold, double &level[], int &count[], int elements) {
+  int handle = FileOpen(StringConcatenate("OvershootECDF_", symbol, "_", DoubleToStr(threshold, 8), ".dat"), FILE_BIN | FILE_WRITE);
   if (handle < 1) {
     Print(GetLastError());
     return;
   }
 
-  int size = ArraySize(count);
-  FileWriteInteger(handle, size);
+  FileWriteInteger(handle, elements);
   int cumsum = 0;
   int i;
-  for (i = 0; i < size; i++) {
+  for (i = 0; i < elements; i++) {
     cumsum += count[i];
     FileWriteDouble(handle, level[i]);
     FileWriteInteger(handle, cumsum);
@@ -55,15 +55,15 @@ void OvershootECDF_Write(string filename, double &level[], int &count[]) {
 
   FileClose(handle);
 
-  handle = FileOpen(filename + ".csv", FILE_CSV | FILE_WRITE, ",");
+  handle = FileOpen(StringConcatenate("csv\\OvershootECDF_", symbol, "_", DoubleToStr(threshold, 8), ".csv"), FILE_CSV | FILE_WRITE, ",");
   if (handle < 1) {
     Print(GetLastError());
     return;
   }
 
-  FileWrite(handle, size);
+  FileWrite(handle, elements);
   cumsum = 0;
-  for (i = 0; i < size; i++) {
+  for (i = 0; i < elements; i++) {
     cumsum += count[i];
     FileWrite(handle, level[i], cumsum);
   }
@@ -71,8 +71,8 @@ void OvershootECDF_Write(string filename, double &level[], int &count[]) {
   FileClose(handle);
 }
 
-void OvershootECDF_Read(string filename, double &level[], int &count[]) {
-  int handle = FileOpen(filename + ".dat", FILE_BIN | FILE_READ);
+void OvershootECDF_Read(string symbol, double threshold, double &level[], int &count[]) {
+  int handle = FileOpen(StringConcatenate("OvershootECDF_", symbol, "_", DoubleToStr(threshold, 8), ".dat"), FILE_BIN | FILE_READ);
   if (handle < 1) {
     Print(GetLastError());
     return;
@@ -94,10 +94,9 @@ void OvershootECDF_MultiRead(string symbol, double thresholds[], int &index[], d
   ArrayResize(index, n);
   int idx = 0;
   for (int i = 0; i < n; i++) {
-    string filename = StringConcatenate("OvershootECDF_", symbol, "_", DoubleToStr(thresholds[i], 6));
     double l[0];
     int c[0];
-    OvershootECDF_Read(filename, l , c);
+    OvershootECDF_Read(symbol, thresholds[i], l, c);
     ArrayCopy(level, l, idx);
     ArrayCopy(count, c, idx);
     idx += ArraySize(c);
