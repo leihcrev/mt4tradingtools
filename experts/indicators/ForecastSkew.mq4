@@ -3,26 +3,23 @@
 #property link      "https://sites.google.com/site/leihcrev/"
 
 #property indicator_separate_window
-#property indicator_buffers 3
+#property indicator_buffers 1
 
-#property indicator_color1 Lime
-#property indicator_width1 2
-#property indicator_color2 Red
-#property indicator_width2 2
-#property indicator_color3 White
-#property indicator_width3 1
+#property indicator_level1 0.5
+
+#property indicator_color1 White
+#property indicator_width1 1
 
 #include <IndicatorUtils.mqh>
 #include <OvershootECDF.mqh>
 
 // Input parameters
-extern double ThresholdStart  = 0.0001;
-extern double ThresholdTick   = 0.0001;
-extern int    Thresholds      = 100;
-extern int    MaxBars         = 28800;
-extern double FixedSpread     = 0.01;
-extern datetime DumpFrom      = 0;
-extern datetime DumpTo        = 0;
+extern double ThresholdStart  = 0.0002;
+extern double ThresholdTick   = 0.0002;
+extern int    Thresholds      = 10;
+extern double ForecastTick    = 0.01;
+extern double TargetWidth     = 2.0;
+extern int    MaxBars         = 14400; // 28800;
 
 // Variables
 double   threshold[0];
@@ -30,8 +27,6 @@ int      mode[0];
 double   overshootLevel[0];
 double   extremaPrice[0];
 double   dcPrice[0];
-double   evenOvershootLevel[0];
-double   skewness[0];
 bool     reliable[0];
 bool     isInitialized = false;
 
@@ -41,12 +36,9 @@ int      count[0];
 
 int      reliables = 0.0;
 
-double   ReverseNapier;
-
 // Buffers
-double UpwardSkewness[];
-double DownwardSkewness[];
 double Skewness[];
+double OvershootProbability[];
 
 int init() {
   ArrayResize(threshold, Thresholds);
@@ -54,33 +46,24 @@ int init() {
   ArrayResize(overshootLevel, Thresholds);
   ArrayResize(extremaPrice, Thresholds);
   ArrayResize(dcPrice, Thresholds);
-  ArrayResize(evenOvershootLevel, Thresholds);
-  ArrayResize(skewness, Thresholds);
   ArrayResize(reliable, Thresholds);
 
   IndicatorShortName("ForecastSkew");
 
+  IndicatorBuffers(2);
   IndicatorDigits(8);
 
-  SetIndexLabel(0, "UpwardSkewness");
-  SetIndexBuffer(0, UpwardSkewness);
-  SetIndexStyle(0, DRAW_HISTOGRAM);
-  SetIndexLabel(1, "DownwardSkewness");
-  SetIndexBuffer(1, DownwardSkewness);
-  SetIndexStyle(1, DRAW_HISTOGRAM);
-  SetIndexLabel(2, "Skewness");
-  SetIndexBuffer(2, Skewness);
-
-  SetLevelValue(0, 1);
-  SetLevelValue(1, -1);
+  SetIndexLabel(0, "Skewness");
+  SetIndexBuffer(0, Skewness);
+  SetIndexLabel(1, "OvershootProbability");
+  SetIndexBuffer(1, OvershootProbability);
+  SetIndexStyle(1, DRAW_NONE);
 
   for (int th = 0; th < Thresholds; th++) {
     threshold[th] = ThresholdStart + ThresholdTick * th;
   }
 
   OvershootECDF_MultiRead(Symbol(), threshold, index, level, count);
-
-  ReverseNapier = 1.0 / MathExp(1.0);
 
   return(0);
 }
@@ -90,13 +73,11 @@ int deinit() {
 }
 
 int start() {
-  double spread = FixedSpread;
-  if (FixedSpread == 0.0) {
-    spread = Ask - Bid;
-  }
+  static double spread;
 
   if (!isInitialized) {
     isInitialized = true;
+    spread = Ask - Bid;
     for (int th = 0; th < Thresholds; th++) {
       mode[th] = 0;
       overshootLevel[th] = 0.0;
@@ -108,29 +89,14 @@ int start() {
       double prices[4];
       GetPricesFromBar(prices, i, spread);
       for (int j = 0; j < 4; j++) {
-        UpdateDCOS(prices[j]);
+        UpdateDCOS(i, prices[j], spread);
       }
-      UpdateBuffers(i, prices[3], spread);
     }
   }
 
-  double x = (Bid + Ask) / 2.0;
-  UpdateDCOS(x);
-  UpdateBuffers(0, x, spread);
-
-  if (Time[0] >= DumpFrom && Time[0] <= DumpTo) {
-    Dump();
-  }
+  UpdateDCOS(0, (Bid + Ask) / 2.0, spread);
 
   return(0);
-}
-
-void Dump() {
-  string skew = "";
-  for (int th = 0; th < Thresholds; th++) {
-    skew = StringConcatenate(skew, ",", DoubleToStr(skewness[th], 8));
-  }
-  Print(TimeToStr(TimeCurrent(), TIME_DATE | TIME_SECONDS), skew);
 }
 
 void GetPricesFromBar(double &prices[], int i, double spread) {
@@ -147,7 +113,9 @@ void GetPricesFromBar(double &prices[], int i, double spread) {
   }
 }
 
-void UpdateDCOS(double x) {
+void UpdateDCOS(int i, double x, double spread) {
+  double OSP[0];
+  ArrayResize(OSP, Thresholds);
   for (int th = 0; th < Thresholds; th++) {
     double currentLevel;
     if (mode[th] == -1) {
@@ -164,13 +132,11 @@ void UpdateDCOS(double x) {
           reliable[th] = true;
           reliables++;
         }
-        evenOvershootLevel[th] = GetEvenOvershootLevel(th);
       }
       else {
         currentLevel = (dcPrice[th] - x) / dcPrice[th] / threshold[th];
         if (overshootLevel[th] < currentLevel) {
           overshootLevel[th] = currentLevel;
-          evenOvershootLevel[th] = GetEvenOvershootLevel(th);
         }
       }
     } // end if (mode[th] == -1)
@@ -188,76 +154,93 @@ void UpdateDCOS(double x) {
           reliable[th] = true;
           reliables++;
         }
-        evenOvershootLevel[th] = GetEvenOvershootLevel(th);
       }
       else {
         currentLevel = (x - dcPrice[th]) / dcPrice[th] / threshold[th];
         if (overshootLevel[th] < currentLevel) {
           overshootLevel[th] = currentLevel;
-          evenOvershootLevel[th] = GetEvenOvershootLevel(th);
         }
       }
     } // end else (mode[th] == -1)
+
+    // Calculate Skewness
     if (reliable[th]) {
-      /*
-      double DCDistance = 1.0 + currentLevel - overshootLevel[th];
-      double OSDistance = DCDistance * (evenOvershootLevel[th] - overshootLevel[th]);
-      skewness[th] = mode[th] * (OSDistance - DCDistance) / 2.0;
-      */
-      skewness[th] = mode[th] * (evenOvershootLevel[th] - overshootLevel[th] - 1.0) / 2.0;
+      OSP[th] = GetOSP(th);
     }
     else {
-      skewness[th] = 0.0;
+      OSP[th] = MathExp(-1.0);
     }
   }
+  CalculateSkewness(i, OSP, x, spread);
 }
 
-double GetEvenOvershootLevel(int th) {
-  double p = OvershootECDF_MultiRefer(th, index, level, count, overshootLevel[th]);
-  return(OvershootECDF_MultiReverseRefer(th, index, level, count, 1.0 - (1.0 - p) * ReverseNapier));
+double GetOSP(int th) {
+  double ECDFBase = OvershootECDF_MultiRefer(th, index, level, count, overshootLevel[th]);
+  double ECDFTarget = OvershootECDF_MultiRefer(th, index, level, count, overshootLevel[th] + 1.0);
+  double OSP;
+  if (ECDFBase == 1.0) {
+    OSP = 0.0;
+  }
+  else {
+    OSP = (1.0 - ECDFTarget) / (1.0 - ECDFBase);
+  }
+  return(OSP);
 }
 
-void UpdateBuffers(int i, double x, double spread) {
-  UpwardSkewness[i] = 0.0;
-  DownwardSkewness[i] = 0.0;
+void CalculateSkewness(int i, double &OSP[], double price, double spread) {
+  Skewness[i] = 0.0;
+  OvershootProbability[i] = 0.0;
   for (int th = 0; th < Thresholds; th++) {
-    double s = skewness[th];
-    if (s > 0) {
-      UpwardSkewness[i] += s;
+    double p = CalculateProbability(price / ForecastTick * threshold[th], OSP[th]);
+    if (mode[th] == -1) {
+      p = 1.0 - p;
     }
-    else {
-      DownwardSkewness[i] += s;
-    }
+    Skewness[i] += p;
+    OvershootProbability[i] += OSP[th];
   }
-  UpwardSkewness[i] /= Thresholds;
-  DownwardSkewness[i] /= Thresholds;
-  Skewness[i] = UpwardSkewness[i] + DownwardSkewness[i];
+  Skewness[i] /= Thresholds;
+  OvershootProbability[i] /= Thresholds;
+}
 
-/*
-  double hiext = 0.0, loext = 0.0;
-  double upReward = 0.0, downRisk = 0.0;
-  double downReward = 0.0, upRisk = 0.0;
-  double s = 0.0;
-  for (int th = 0; th < Thresholds; th++) {
-    s += skewness[th];
-    if (s > hiext) {
-      hiext = s;
-    }
-    if (s < loext) {
-      loext = s;
-    }
-    if (s + downReward > upReward + downRisk) {
-      upReward = s;
-      downRisk = loext;
-    }
-    if (s + upReward < downReward + upRisk) {
-      downReward = s;
-      downRisk = hiext;
-    }
+double CalculateProbability(double N, double OSP) {
+  double C = MathPow(OSP, 1.0 / N);
+  if (C == N / (N + 1)) {
+    return(0.5);
   }
-  UpwardSkewness[i] = MathMax(0, upReward + downRisk);
-  DownwardSkewness[i] = MathMin(0, downReward + upRisk);
-  Skewness[i] = (upReward + downRisk) + (downReward + upRisk);
-*/
+
+  double x;
+  if (OSP > MathExp(-1)) {
+    x = 4999.0 / 5001.0;
+  }
+  else {
+    x = 5001.0 / 4999.0;
+  }
+  double d = f(x, N, C) / fd(x, N);
+  while (MathAbs(d) > 0.00000001) {
+    x -= d;
+    if (x <= 0) {
+      return(1.0);
+    }
+    if (x == 1) {
+      return(0.5);
+    }
+    double fd = fd(x, N);
+    d = f(x, N, C) / fd;
+  }
+  return(1.0 / (x + 1.0));
+}
+
+double f(double x, double N, double C) {
+  double xN = MathPow(x, N);
+  double xNPlus1 = xN * x;
+  return((1 - xN) / (1 - xNPlus1) - C);
+}
+
+double fd(double x, double N) {
+  double xNMinus1 = MathPow(x, N - 1);
+  double xN = xNMinus1 * x;
+  double xNPlus1 = xN * x;
+  double dividend = xNMinus1 * (N * (x - 1) - x * (xN - 1));
+  return(dividend / (xNPlus1 - 1) / (xNPlus1 - 1));
 }
 
