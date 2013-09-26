@@ -6,58 +6,49 @@
  * Update DC status.
  * Return true when DC occured.
  */
-bool UpdateDCStatus(double currentPrice, double threshold,
-    int &mode, double &extremaPrice, double &dcPrice, double &currentLevel, double &overshootLevel,
-    int &prevMode, double &prevExtremaPrice, double &prevDcPrice, double &prevCurrentLevel, double &prevOvershootLevel) {
-  prevMode = mode;
-  prevExtremaPrice = extremaPrice;
-  prevDcPrice = dcPrice;
-  prevCurrentLevel = currentLevel;
-  prevOvershootLevel = overshootLevel;
-
-  double x = MathLog(currentPrice);
+bool UpdateDCStatus(double logPrice, int th, double &threshold[], int &mode[], double &extremaPrice[], double &dcPrice[], double &currentLevel[], double &overshootLevel[]) {
   double newlevel;
-  bool ret = false;
-  if (mode == -1) {
-    if (x < extremaPrice) {
-      extremaPrice = x;
+  if (mode[th] == -1) {
+    if (logPrice < extremaPrice[th]) {
+      extremaPrice[th] = logPrice;
     }
-    if (x - extremaPrice >= threshold) {
-      newlevel = (x - dcPrice) / threshold;
-      mode = 1;
-      extremaPrice = x;
-      dcPrice = x;
-      currentLevel = newlevel;
-      overshootLevel = newlevel;
-      ret = true;
+    if (logPrice - extremaPrice[th] >= threshold[th]) {
+      newlevel = (logPrice - dcPrice[th]) / threshold[th];
+      mode[th] = 1;
+      extremaPrice[th] = logPrice;
+      dcPrice[th] = logPrice;
+      currentLevel[th] = newlevel;
+      overshootLevel[th] = newlevel;
+      return(true);
     }
     else {
-      currentLevel = (dcPrice - x) / threshold;
-      if (currentLevel > overshootLevel) {
-        overshootLevel = currentLevel;
+      currentLevel[th] = (dcPrice[th] - logPrice) / threshold[th];
+      if (currentLevel[th] > overshootLevel[th]) {
+        overshootLevel[th] = currentLevel[th];
       }
+      return(false);
     }
   }
   else {
-    if (x > extremaPrice) {
-      extremaPrice = x;
+    if (logPrice > extremaPrice[th]) {
+      extremaPrice[th] = logPrice;
     }
-    if (extremaPrice - x >= threshold) {
-      newlevel = (dcPrice - x) / threshold;
-      mode = -1;
-      extremaPrice = x;
-      dcPrice = x;
-      currentLevel = newlevel;
-      overshootLevel = newlevel;
-      ret = true;
+    if (extremaPrice[th] - logPrice >= threshold[th]) {
+      newlevel = (dcPrice[th] - logPrice) / threshold[th];
+      mode[th] = -1;
+      extremaPrice[th] = logPrice;
+      dcPrice[th] = logPrice;
+      currentLevel[th] = newlevel;
+      overshootLevel[th] = newlevel;
+      return(true);
     }
     else {
-      currentLevel = (x - dcPrice) / threshold;
-      if (currentLevel > overshootLevel) {
-        overshootLevel = currentLevel;
+      currentLevel[th] = (logPrice - dcPrice[th]) / threshold[th];
+      if (currentLevel[th] > overshootLevel[th]) {
+        overshootLevel[th] = currentLevel[th];
       }
+      return(false);
     }
   }
-  return(ret);
 }
 

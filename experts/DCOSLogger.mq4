@@ -10,11 +10,14 @@ extern int    Thresholds    = 3000;
 
 // Module variables
 double threshold[0];
+bool reliable[0];
+
 int mode[0];
 double dcPrice[0];
 double extremaPrice[0];
+double currentLevel[0];
 double overshootLevel[0];
-bool reliable[0];
+
 int handle;
 datetime latest;
 
@@ -25,36 +28,19 @@ void start() {
   }
   latest = now;
 
-  int tmpMode;
-  double tmpExtremaPrice, tmpDcPrice, tmpCurrentLevel, tmpOvershootLevel;
-  int prevMode;
-  double prevOvershootLevel;
-
-  double x = (Bid + Ask) / 2.0;
-
+  double x = MathLog((Bid + Ask) / 2.0);
   for (int i = 0; i < Thresholds; i++) {
-    tmpMode = mode[i];
-    tmpExtremaPrice = extremaPrice[i];
-    tmpDcPrice = dcPrice[i];
-    tmpOvershootLevel = overshootLevel[i];
+    int prevMode = mode[i];
+    double prevOvershootLevel = overshootLevel[i];
 
-    bool dcOccured = UpdateDCStatus(x, threshold[i],
-      tmpMode, tmpExtremaPrice, tmpDcPrice, tmpCurrentLevel, tmpOvershootLevel,
-      prevMode, tmpExtremaPrice, tmpDcPrice, tmpCurrentLevel, prevOvershootLevel); 
-    
-    if (dcOccured) {
+    if (UpdateDCStatus(x, i, threshold, mode, extremaPrice, dcPrice, currentLevel, overshootLevel)) {
       if (reliable[i]) {
-        FileWrite(handle, DoubleToStr(threshold[i], 5), prevMode, prevOvershootLevel, StringSetChar(StringSetChar(TimeToStr(TimeCurrent(), TIME_DATE | TIME_SECONDS), 4, '-'), 7, '-'), DoubleToStr(x, Digits + 1));
+        FileWrite(handle, StringSetChar(StringSetChar(TimeToStr(TimeCurrent(), TIME_DATE | TIME_SECONDS), 4, '-'), 7, '-'), DoubleToStr(x, Digits + 1), DoubleToStr(threshold[i], 5), prevMode, prevOvershootLevel);
       }
       else {
         reliable[i] = true;
       }
     }
-    
-    mode[i] = tmpMode;
-    extremaPrice[i] = tmpExtremaPrice;
-    dcPrice[i] = tmpDcPrice;
-    overshootLevel[i] = tmpOvershootLevel;
   }
 
   return(0);
@@ -62,22 +48,31 @@ void start() {
 
 int init() {
   ArrayResize(threshold, Thresholds);
+  ArrayResize(reliable, Thresholds);
+
   ArrayResize(mode, Thresholds);
   ArrayResize(dcPrice, Thresholds);
   ArrayResize(extremaPrice, Thresholds);
+  ArrayResize(currentLevel, Thresholds);
   ArrayResize(overshootLevel, Thresholds);
-  ArrayResize(reliable, Thresholds);
 
+  double x = MathLog((MarketInfo(Symbol(), MODE_BID) + MarketInfo(Symbol(), MODE_ASK)) / 2.0);
   for (int i = 0; i < Thresholds; i++) {
     threshold[i] = ThresholdTick * (i + 1);
     reliable[i] = false;
+    
+    mode[i] = 1;
+    dcPrice[i] = x;
+    extremaPrice[i] = x;
+    currentLevel[i] = 0;
+    overshootLevel[i] = 0;
   }
 
   handle = FileOpen("DCOS_" + Symbol() + ".csv", FILE_CSV|FILE_WRITE, ',');
   if (handle < 1) {
     Print(GetLastError());
   }
-  FileWrite(handle, "THRESHOLD", "MODE", "OSLEVEL", "TIME", "PRICE");
+  FileWrite(handle, "TIME", "PRICE", "THRESHOLD", "MODE", "OSLEVEL");
   return(0);
 }
 
