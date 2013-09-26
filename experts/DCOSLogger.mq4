@@ -2,86 +2,82 @@
 #property copyright "KIKUCHI Shunsuke"
 #property link      "http://sites.google.com/site/leihcrev/"
 
+#include <DirectionalChange.mqh>
+
 // Input parameters
-extern double DCThreshold         =  0.00264;
+extern double ThresholdTick = 0.00001;
+extern int    Thresholds    = 3000;
 
 // Module variables
-int mode = 0;
-double dcPrice;
-double extremaPrice;
-double overshootLevel;
-double currentLevel;
-double dcSMQ = 0.0;
+double threshold[0];
+int mode[0];
+double dcPrice[0];
+double extremaPrice[0];
+double overshootLevel[0];
+bool reliable[0];
 int handle;
+datetime latest;
 
 void start() {
-  double SMQ = iCustom(Symbol(), Period(), "OSPA", 3, 0);
-  double x = MathLog((Bid + Ask) / 2.0);
-  double prevMode = mode;
+  datetime now = TimeCurrent();
+  if (TimeDay(latest) != TimeDay(now)) {
+    Print(TimeToStr(now, TIME_DATE));
+  }
+  latest = now;
 
-  if (mode == -1) {
-    if (x < extremaPrice) {
-      extremaPrice = x;
-    }
-    if (x - extremaPrice >= DCThreshold) {
-      Log(x, dcSMQ, SMQ);
-      mode = 1;
-      extremaPrice = x;
-      dcPrice = x;
-      currentLevel = 0;
-      overshootLevel = 0;
-      dcSMQ = SMQ;
-    }
-    else {
-      currentLevel = (dcPrice - x) / DCThreshold;
-      if (currentLevel > overshootLevel) {
-        overshootLevel = currentLevel;
+  int tmpMode;
+  double tmpExtremaPrice, tmpDcPrice, tmpCurrentLevel, tmpOvershootLevel;
+  int prevMode;
+  double prevOvershootLevel;
+
+  double x = (Bid + Ask) / 2.0;
+
+  for (int i = 0; i < Thresholds; i++) {
+    tmpMode = mode[i];
+    tmpExtremaPrice = extremaPrice[i];
+    tmpDcPrice = dcPrice[i];
+    tmpOvershootLevel = overshootLevel[i];
+
+    bool dcOccured = UpdateDCStatus(x, threshold[i],
+      tmpMode, tmpExtremaPrice, tmpDcPrice, tmpCurrentLevel, tmpOvershootLevel,
+      prevMode, tmpExtremaPrice, tmpDcPrice, tmpCurrentLevel, prevOvershootLevel); 
+    
+    if (dcOccured) {
+      if (reliable[i]) {
+        FileWrite(handle, DoubleToStr(threshold[i], 5), prevMode, prevOvershootLevel, StringSetChar(StringSetChar(TimeToStr(TimeCurrent(), TIME_DATE | TIME_SECONDS), 4, '-'), 7, '-'), DoubleToStr(x, Digits + 1));
+      }
+      else {
+        reliable[i] = true;
       }
     }
+    
+    mode[i] = tmpMode;
+    extremaPrice[i] = tmpExtremaPrice;
+    dcPrice[i] = tmpDcPrice;
+    overshootLevel[i] = tmpOvershootLevel;
   }
-  else if (mode == 1) {
-    if (x > extremaPrice) {
-      extremaPrice = x;
-    }
-    if (extremaPrice - x >= DCThreshold) {
-      Log(x, dcSMQ, SMQ);
-      mode = -1;
-      extremaPrice = x;
-      dcPrice = x;
-      currentLevel = 0;
-      overshootLevel = 0;
-      dcSMQ = SMQ;
-    }
-    else {
-      currentLevel = (x - dcPrice) / DCThreshold;
-      if (currentLevel > overshootLevel) {
-        overshootLevel = currentLevel;
-      }
-    }
-  }
-  else {
-    mode = 1;
-    extremaPrice = x;
-    dcPrice = x;
-    currentLevel = 0;
-    overshootLevel = 0;
-  }
+
   return(0);
 }
 
-void Log(double price, double dcSMQ, double SMQ) {
-  if (dcSMQ == 0.0) {
-    return;
-  }
-  FileWrite(handle, mode, overshootLevel, StringSetChar(StringSetChar(TimeToStr(TimeCurrent(), TIME_DATE | TIME_SECONDS), 4, '-'), 7, '-'), DoubleToStr(MathExp(price), Digits + 1), dcSMQ, SMQ);
-}
-
 int init() {
-  handle = FileOpen("DCOS_" + Symbol() + "_" + DoubleToStr(DCThreshold, 5) + ".csv", FILE_CSV|FILE_WRITE, ',');
+  ArrayResize(threshold, Thresholds);
+  ArrayResize(mode, Thresholds);
+  ArrayResize(dcPrice, Thresholds);
+  ArrayResize(extremaPrice, Thresholds);
+  ArrayResize(overshootLevel, Thresholds);
+  ArrayResize(reliable, Thresholds);
+
+  for (int i = 0; i < Thresholds; i++) {
+    threshold[i] = ThresholdTick * (i + 1);
+    reliable[i] = false;
+  }
+
+  handle = FileOpen("DCOS_" + Symbol() + ".csv", FILE_CSV|FILE_WRITE, ',');
   if (handle < 1) {
     Print(GetLastError());
   }
-  FileWrite(handle, "MODE", "OSLEVEL", "TIME", "PRICE", "DCSMQ", "SMQ");
+  FileWrite(handle, "THRESHOLD", "MODE", "OSLEVEL", "TIME", "PRICE");
   return(0);
 }
 
