@@ -3,16 +3,19 @@
 #property link      "https://sites.google.com/site/leihcrev/"
 
 #property indicator_separate_window
-#property indicator_buffers 2
-#property indicator_minimum 0
+#property indicator_buffers 3
+#property indicator_minimum -1
 
 #property indicator_color1 Green
 #property indicator_width1 2
 #property indicator_color2 Red
 #property indicator_width2 2
+#property indicator_color3 White
+#property indicator_width3 1
 
 #include <IndicatorUtils.mqh>
 
+#define OBJNAME_AGAINST_ENTRY_LINE "Against Entry Line"
 #define OBJNAME_TPLINE "Take Profit Line"
 
 // Input parameters
@@ -34,6 +37,7 @@ bool     isInitialized = false;
 // Buffers
 double OSLevelU[];
 double OSLevelD[];
+double OSLevel[];
 
 int init() {
   SetIndexLabel(0, "Up OS");
@@ -44,10 +48,15 @@ int init() {
   SetIndexBuffer(1, OSLevelD);
   SetIndexStyle(1, DRAW_HISTOGRAM);
 
+  SetIndexLabel(2, "OS");
+  SetIndexBuffer(2, OSLevel);
+  SetIndexStyle(2, DRAW_LINE);
+
   SetLevelValue(0, AgainstEntryLevel);
   SetLevelValue(1, AgainstStopLevel);
   SetLevelValue(2, FollowEntryLevel);
   SetLevelValue(3, FollowStopLevel);
+  SetLevelValue(4, -1.0);
 
   return(0);
 }
@@ -64,6 +73,7 @@ int deinit() {
 int start() {
   int prevMode;
   double prevLevel;
+  double currentLevel;
 
   if (!isInitialized) {
     isInitialized = true;
@@ -100,9 +110,9 @@ int start() {
           MoveExtremaLabel(extremaTime, extremaPrice);
         }
         else {
-          overshootLevel = (dcPrice - hi) / dcPrice / Threshold;
-          if (overshootLevel <= prevLevel) {
-            overshootLevel = prevLevel;
+          currentLevel = (dcPrice - hi) / dcPrice / Threshold;
+          if (overshootLevel <= currentLevel) {
+            overshootLevel = currentLevel;
           }
         }
         if (Open[i] >= Close[i]) { if (lo < extremaPrice) {
@@ -129,9 +139,9 @@ int start() {
           MoveExtremaLabel(extremaTime, extremaPrice);
         }
         else {
-          overshootLevel = (lo - dcPrice) / dcPrice / Threshold;
-          if (overshootLevel <= prevLevel) {
-            overshootLevel = prevLevel;
+          currentLevel = (lo - dcPrice) / dcPrice / Threshold;
+          if (overshootLevel <= currentLevel) {
+            overshootLevel = currentLevel;
           }
         }
         if (Open[i] <= Close[i]) { if (hi > extremaPrice) {
@@ -151,6 +161,7 @@ int start() {
         OSLevelU[i] = EMPTY_VALUE;
         OSLevelD[i] = overshootLevel;
       }
+      OSLevel[i] = currentLevel;
     }
   }
 
@@ -177,9 +188,9 @@ int start() {
       MoveExtremaLabel(extremaTime, extremaPrice);
     }
     else {
-      overshootLevel = (dcPrice - x) / dcPrice / Threshold;
-      if (overshootLevel <= prevLevel) {
-        overshootLevel = prevLevel;
+      currentLevel = (dcPrice - x) / dcPrice / Threshold;
+      if (overshootLevel <= currentLevel) {
+        overshootLevel = currentLevel;
       }
     }
   }
@@ -201,9 +212,9 @@ int start() {
       MoveExtremaLabel(extremaTime, extremaPrice);
     }
     else {
-      overshootLevel = (x - dcPrice) / dcPrice / Threshold;
-      if (overshootLevel <= prevLevel) {
-        overshootLevel = prevLevel;
+      currentLevel = (x - dcPrice) / dcPrice / Threshold;
+      if (overshootLevel <= currentLevel) {
+        overshootLevel = currentLevel;
       }
     }
   }
@@ -218,9 +229,25 @@ int start() {
     OSLevelU[0] = EMPTY_VALUE;
     OSLevelD[0] = overshootLevel;
   }
+  OSLevel[0] = currentLevel;
+
+  double price;
+  if (overshootLevel < AgainstEntryLevel) {
+    price = dcPrice * (1.0 + mode * Threshold * AgainstEntryLevel);
+    if (ObjectFind(OBJNAME_AGAINST_ENTRY_LINE) == -1) {
+      ObjectCreate(OBJNAME_AGAINST_ENTRY_LINE, OBJ_HLINE, 0, 0, price);
+      ObjectSet(OBJNAME_AGAINST_ENTRY_LINE, OBJPROP_COLOR, Lime);
+    }
+    else {
+      ObjectSet(OBJNAME_AGAINST_ENTRY_LINE, OBJPROP_PRICE1, price);
+    }
+  }
+  else {
+    ObjectDelete(OBJNAME_AGAINST_ENTRY_LINE);
+  }
 
   if (overshootLevel > AgainstEntryLevel) { if (overshootLevel < AgainstStopLevel) {
-    double price = extremaPrice * (1.0 - mode * Threshold) + mode * (Ask - Bid) / 2.0;
+    price = extremaPrice * (1.0 - mode * Threshold) + mode * (Ask - Bid) / 2.0;
     if (ObjectFind(OBJNAME_TPLINE) == -1) {
       ObjectCreate(OBJNAME_TPLINE, OBJ_HLINE, 0, 0, price);
       ObjectSet(OBJNAME_TPLINE, OBJPROP_COLOR, Lime);
@@ -229,7 +256,7 @@ int start() {
       ObjectSet(OBJNAME_TPLINE, OBJPROP_PRICE1, price);
     }
   } }
-  if (overshootLevel < AgainstEntryLevel || overshootLevel > AgainstStopLevel) {
+  else {
     ObjectDelete(OBJNAME_TPLINE);
   }
 

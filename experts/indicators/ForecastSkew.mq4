@@ -2,43 +2,29 @@
 #property copyright "KIKUCHI Shunsuke"
 #property link      "https://sites.google.com/site/leihcrev/"
 
+#define INDICATOR_NAME "ForecastSkew"
+
 #property indicator_separate_window
 #property indicator_buffers 8
 
 #property indicator_level1 1
 #property indicator_level2 -1
 
-#property indicator_color1 C'0xFF0000'
-#property indicator_width1 3
-#property indicator_color2 C'0xFF9B00'
-#property indicator_width2 3
-#property indicator_color3 C'0xF2FF00'
-#property indicator_width3 3
-#property indicator_color4 C'0x30FF00'
-#property indicator_width4 3
-#property indicator_color5 C'0x00FF30'
-#property indicator_width5 3
-#property indicator_color6 C'0x00FFF2'
-#property indicator_width6 3
-#property indicator_color7 C'0x009BFF'
-#property indicator_width7 3
-#property indicator_color8 C'0x0000FF'
-#property indicator_width8 3
-
 #include <IndicatorUtils.mqh>
 #include <OvershootECDF.mqh>
+#include <LambertW.mqh>
 
 #define Thresholds 8
 
 // Input parameters
-extern double Threshold1   = 0.02120;
-extern double Threshold2   = 0.01060;
-extern double Threshold3   = 0.00530;
-extern double Threshold4   = 0.00265;
-extern double Threshold5   = 0.00133;
-extern double Threshold6   = 0.00067;
-extern double Threshold7   = 0.00034;
-extern double Threshold8   = 0.00017;
+extern double Threshold1   = 0.00265;
+extern double Threshold2   = 0.00133;
+extern double Threshold3   = 0.00067;
+extern double Threshold4   = 0.00034;
+extern double Threshold5   = 0.00017;
+extern double Threshold6   = 0.00009;
+extern double Threshold7   = 0.00005;
+extern double Threshold8   = 0.00003;
 extern double ForecastTick = 0.01;
 extern int    MaxBars      = 28800;
 
@@ -58,6 +44,17 @@ double   level[0];
 int      count[0];
 
 int      reliables = 0.0;
+
+color    colors[] = {
+  C'0x77, 0x77, 0xff',
+  C'0x77, 0xdd, 0xff',
+  C'0x77, 0xff, 0xdd',
+  C'0x77, 0xff, 0xbb',
+  C'0xbb, 0xff, 0x77',
+  C'0xbb, 0xff, 0x77',
+  C'0xff, 0xbb, 0x77',
+  C'0xff, 0x77, 0x77'
+};
 
 // Buffers
 double Skewness1[];
@@ -79,34 +76,18 @@ int init() {
   ArrayResize(reliable, Thresholds);
   ArrayResize(xAtOSL0, Thresholds);
 
-  IndicatorShortName("ForecastSkew");
+  IndicatorShortName(INDICATOR_NAME);
 
   IndicatorDigits(8);
 
-  SetIndexLabel(0, "Skew(" + DoubleToStr(Threshold1 * 100, 3) + "%)");
   SetIndexBuffer(0, Skewness1);
-  SetIndexStyle(0, DRAW_HISTOGRAM);
-  SetIndexLabel(1, "Skew(" + DoubleToStr(Threshold2 * 100, 3) + "%)");
   SetIndexBuffer(1, Skewness2);
-  SetIndexStyle(1, DRAW_HISTOGRAM);
-  SetIndexLabel(2, "Skew(" + DoubleToStr(Threshold3 * 100, 3) + "%)");
   SetIndexBuffer(2, Skewness3);
-  SetIndexStyle(2, DRAW_HISTOGRAM);
-  SetIndexLabel(3, "Skew(" + DoubleToStr(Threshold4 * 100, 3) + "%)");
   SetIndexBuffer(3, Skewness4);
-  SetIndexStyle(3, DRAW_HISTOGRAM);
-  SetIndexLabel(4, "Skew(" + DoubleToStr(Threshold5 * 100, 3) + "%)");
   SetIndexBuffer(4, Skewness5);
-  SetIndexStyle(4, DRAW_HISTOGRAM);
-  SetIndexLabel(5, "Skew(" + DoubleToStr(Threshold6 * 100, 3) + "%)");
   SetIndexBuffer(5, Skewness6);
-  SetIndexStyle(5, DRAW_HISTOGRAM);
-  SetIndexLabel(6, "Skew(" + DoubleToStr(Threshold7 * 100, 3) + "%)");
   SetIndexBuffer(6, Skewness7);
-  SetIndexStyle(6, DRAW_HISTOGRAM);
-  SetIndexLabel(7, "Skew(" + DoubleToStr(Threshold8 * 100, 3) + "%)");
   SetIndexBuffer(7, Skewness8);
-  SetIndexStyle(7, DRAW_HISTOGRAM);
 
   threshold[0] = Threshold1;
   threshold[1] = Threshold2;
@@ -124,6 +105,9 @@ int init() {
     double ECDFTarget = OvershootECDF_MultiRefer(th, index, level, count, 1.0);
     double OSP = (1.0 - ECDFTarget) / (1.0 - ECDFBase);
     xAtOSL0[th] = (1.0 - OSP) / OSP;
+
+    SetIndexLabel(th, "Skew(" + DoubleToStr(threshold[th] * 100, 3) + "%)");
+    SetIndexStyle(th, DRAW_HISTOGRAM, STYLE_SOLID, 3, colors[th]);
   }
 
   return(0);
@@ -153,9 +137,12 @@ int start() {
         UpdateDCOS(i, prices[j], spread);
       }
     }
+    InitializePrintVariables();
   }
 
   UpdateDCOS(0, (Bid + Ask) / 2.0, spread);
+
+  PrintVariables();
 
   return(0);
 }
@@ -250,7 +237,9 @@ double GetOSP(int th) {
 
   double OSP = (1.0 - ECDFTarget) / (1.0 - ECDFBase);
   double x = (1.0 - OSP) / OSP;
-  x = MathPow(x / xAtOSL0[th], currentLevel[th] - overshootLevel[th] + 1.0) * xAtOSL0[th];
+  if (true) {
+    x = MathPow(x / xAtOSL0[th], currentLevel[th] - overshootLevel[th] + 1.0) * xAtOSL0[th];
+  }
   OSP = 1.0 / (x + 1.0);
   return(OSP);
 }
@@ -319,5 +308,38 @@ double fd(double x, double N) {
   double xNPlus1 = xN * x;
   double dividend = xNMinus1 * (N * (x - 1) - x * (xN - 1));
   return(dividend / (xNPlus1 - 1) / (xNPlus1 - 1));
+}
+
+#define OBJNAME_PREF "ForecastSkew_"
+
+void InitializePrintVariables() {
+  for (int th = 0; th < Thresholds; th++) {
+    string objname = OBJNAME_PREF + (th + 1);
+    ObjectCreate(objname, OBJ_LABEL, WindowFind(INDICATOR_NAME), 0, 0);
+    ObjectSet(objname, OBJPROP_XDISTANCE, 0);
+    ObjectSet(objname, OBJPROP_YDISTANCE, 12 * (th + 1) + 6);
+  }
+}
+
+void PrintVariables() {
+  double max = WindowPriceMax(WindowFind(INDICATOR_NAME));
+  double min = WindowPriceMin(WindowFind(INDICATOR_NAME));
+  double d = (max - min) / (Thresholds + 1);
+  for (int th = 0; th < Thresholds; th++) {
+    string objname = OBJNAME_PREF + (th + 1);
+    string text = DoubleToStr(threshold[th] * 100, 3) + "%:";
+    if (mode[th] == 1) {
+      text = text + "+/";
+    }
+    else {
+      text = text + "-/";
+    }
+    text = text + DoubleToStr(overshootLevel[th], 2) + "/";
+    if (currentLevel[th] > 0) {
+      text = text + " ";
+    }
+    text = text + DoubleToStr(currentLevel[th], 2);
+    ObjectSetText(objname, text, 8, "Lucida Console", colors[th]);
+  }
 }
 

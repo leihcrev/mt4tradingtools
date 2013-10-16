@@ -6,21 +6,6 @@
 #include <Tweet.mqh>
 #include <DateTime.mqh>
 
-// Input parameters
-extern string StrategyParameters  = "==== Strategy parameters ====";
-extern double DCThreshold         =  0.002649;
-extern double OSAgainstEntryLevel =  1.460;
-extern double OSAgainstStopOffset =  2.234;
-extern double OSFollowEntryLevel  =  7.470;
-extern double OSFollowStopLevel   =  8.760;
-extern double GMTOffset           =  9.0;
-extern double WeekendMarginSecs   = 5;
-extern string OrderParameters     = "==== Order parameters ====";
-extern double OptimalF            = 0.3246;
-extern double WorstLoss           = -7200;
-extern double Lots                = 0.0;
-extern int    MagicNumber         = 1;
-
 // Module variables
 double FollowSLFactor;
 double OSAgainstStopLevel;
@@ -56,48 +41,52 @@ void start() {
     return(0);
   }
   double lots, l;
-  bool isSuccess = true;
+  bool isSuccess = true, tpresult;
   if (mode == -1) {
-    if (!againstEntried) { if (currentLevel > OSAgainstEntryLevel) { if (overshootLevel < OSAgainstStopLevel) { if (!HasPosition(Symbol(), MagicNumber, OP_BUY )) {
-      for (lots = GetLots(); lots > 0; lots -= l) {
+    if (!againstEntried) { if (currentLevel > OSAgainstEntryLevel) { if (overshootLevel < OSAgainstStopLevel) {
+      for (lots = GetLots() - GetPositionLots(Symbol(), MagicNumber, OP_BUY); lots > 0; lots -= l) {
         l = MathMin(lots, MarketInfo(Symbol(), MODE_MAXLOT));
-        isSuccess = isSuccess && TakePosition(Symbol(), MagicNumber, OP_BUY , l, Ask * DCThreshold * (OSAgainstStopLevel - currentLevel) / Point, 0, 20, "Take position against overshoot");
+        tpresult = TakePosition(Symbol(), MagicNumber, OP_BUY , l, Ask * DCThreshold * (OSAgainstStopLevel - currentLevel) / Point, 0, 20, "Take position against overshoot");
+        isSuccess = isSuccess && tpresult;
       }
       againstEntried = isSuccess;
-    } } } }
-    if (followEntried ) {
+    } } }
+    if (followEntried) {
       if (overshootLevel > OSFollowStopLevel) {
         ClosePosition(Symbol(), MagicNumber, OP_SELL, "Close by too overshoot");
       }
     }
-    else if (currentLevel > OSFollowEntryLevel ) { if (overshootLevel < OSFollowStopLevel ) { if (!HasPosition(Symbol(), MagicNumber, OP_SELL)) {
-      for (lots = GetLots(); lots > 0; lots -= l) {
+    else if (currentLevel > OSFollowEntryLevel ) { if (overshootLevel < OSFollowStopLevel ) {
+      for (lots = GetLots() - GetPositionLots(Symbol(), MagicNumber, OP_SELL); lots > 0; lots -= l) {
         l = MathMin(lots, MarketInfo(Symbol(), MODE_MAXLOT));
-        isSuccess = isSuccess && TakePosition(Symbol(), MagicNumber, OP_SELL, l, Bid * FollowSLFactor , 0, 20, "Take position follow overshoot" );
+        tpresult = TakePosition(Symbol(), MagicNumber, OP_SELL, l, Bid * FollowSLFactor , 0, 20, "Take position follow overshoot" );
+        isSuccess = isSuccess && tpresult;
       }
       followEntried = isSuccess;
-    } } }
+    } }
   }
   else if (mode ==  1) {
-    if (!againstEntried) { if (currentLevel > OSAgainstEntryLevel) { if (overshootLevel < OSAgainstStopLevel) { if (!HasPosition(Symbol(), MagicNumber, OP_SELL)) {
-      for (lots = GetLots(); lots > 0; lots -= l) {
+    if (!againstEntried) { if (currentLevel > OSAgainstEntryLevel) { if (overshootLevel < OSAgainstStopLevel) {
+      for (lots = GetLots() - GetPositionLots(Symbol(), MagicNumber, OP_SELL); lots > 0; lots -= l) {
         l = MathMin(lots, MarketInfo(Symbol(), MODE_MAXLOT));
-        isSuccess = isSuccess && TakePosition(Symbol(), MagicNumber, OP_SELL, l, Bid * DCThreshold * (OSAgainstStopLevel - currentLevel) / Point, 0, 20, "Take position against overshoot");
+        tpresult = TakePosition(Symbol(), MagicNumber, OP_SELL, l, Bid * DCThreshold * (OSAgainstStopLevel - currentLevel) / Point, 0, 20, "Take position against overshoot");
+        isSuccess = isSuccess && tpresult;
       }
       againstEntried = isSuccess;
-    } } } }
-    if (followEntried ) {
+    } } }
+    if (followEntried) {
       if (overshootLevel > OSFollowStopLevel) {
         ClosePosition(Symbol(), MagicNumber, OP_BUY, "Close by too overshoot");
       }
     }
-    else if (currentLevel > OSFollowEntryLevel ) { if (overshootLevel < OSFollowStopLevel ) { if (!HasPosition(Symbol(), MagicNumber, OP_BUY )) {
-      for (lots = GetLots(); lots > 0; lots -= l) {
+    else if (currentLevel > OSFollowEntryLevel ) { if (overshootLevel < OSFollowStopLevel ) {
+      for (lots = GetLots() - GetPositionLots(Symbol(), MagicNumber, OP_SELL); lots > 0; lots -= l) {
         l = MathMin(lots, MarketInfo(Symbol(), MODE_MAXLOT));
-        isSuccess = isSuccess && TakePosition(Symbol(), MagicNumber, OP_BUY , l, Ask * FollowSLFactor , 0, 20, "Take position follow overshoot" );
+        tpresult = TakePosition(Symbol(), MagicNumber, OP_BUY , l, Ask * FollowSLFactor , 0, 20, "Take position follow overshoot" );
+        isSuccess = isSuccess && tpresult;
       }
       followEntried = isSuccess;
-    } } }
+    } }
   }
 
   return(0);
