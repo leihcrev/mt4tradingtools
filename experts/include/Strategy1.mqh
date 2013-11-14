@@ -7,16 +7,19 @@
 #include <DateTime.mqh>
 
 // Module variables
-double FollowSLFactor;
 double OSAgainstStopLevel;
 // -- For directional change
 int mode = 0;
 double dcPrice;
 double extremaPrice;
-double overshootLevel;
 double currentLevel;
-bool againstEntried = false;
-bool followEntried = false;
+double overshootLevel;
+double overshootLevelPeak;
+double overshootLevelDrawdown;
+bool entried = false;
+
+double modifiedCL;
+double modifiedOL;
 
 // -- For avoid weekend
 datetime NextWeekendDatetime = 0;
@@ -26,66 +29,46 @@ void start() {
 
   UpdateDCOS();
 
-  datetime now = TimeCurrent();
-  if (now > NextWeekendDatetime + 60) {
-    NextWeekendDatetime = GetNextWeekendDatetime(now, GMTOffset);
-    Print("Update NextWeekendDatetime: ", TimeToStr(NextWeekendDatetime, TIME_DATE | TIME_SECONDS));
-  }
-  if (now > NextWeekendDatetime - WeekendMarginSecs) {
-    ClosePosition(Symbol(), MagicNumber, EMPTY, "Close on weekend");
-    return(0);
+  if (WeekendMarginSecs != 0) {
+    datetime now = TimeCurrent();
+    if (now > NextWeekendDatetime + 60) {
+      NextWeekendDatetime = GetNextWeekendDatetime(now, GMTOffset);
+      Print("Update NextWeekendDatetime: ", TimeToStr(NextWeekendDatetime, TIME_DATE | TIME_SECONDS));
+    }
+    if (now > NextWeekendDatetime - WeekendMarginSecs) {
+      ClosePosition(Symbol(), MagicNumber, EMPTY, "Close on weekend");
+      return(0);
+    }
   }
 
-  if (overshootLevel < OSAgainstEntryLevel && overshootLevel < OSFollowEntryLevel) {
+  if (entried) {
+    return(0);
+  }
+  if (overshootLevel < OSAgainstEntryLevel) {
     ClosePosition(Symbol(), MagicNumber, EMPTY, "Close by directional change");
     return(0);
   }
+
   double lots, l;
   bool isSuccess = true, tpresult;
   if (mode == -1) {
-    if (!againstEntried) { if (currentLevel > OSAgainstEntryLevel) { if (overshootLevel < OSAgainstStopLevel) {
+    if (modifiedCL > OSAgainstEntryLevel) { if (modifiedOL < OSAgainstStopLevel) {
       for (lots = GetLots() - GetPositionLots(Symbol(), MagicNumber, OP_BUY); lots > 0; lots -= l) {
         l = MathMin(lots, MarketInfo(Symbol(), MODE_MAXLOT));
-        tpresult = TakePosition(Symbol(), MagicNumber, OP_BUY , l, Ask * DCThreshold * (OSAgainstStopLevel - currentLevel) / Point, 0, 20, "Take position against overshoot");
+        tpresult = TakePosition(Symbol(), MagicNumber, OP_BUY , l, Ask * DCThreshold * (OSAgainstStopLevel - modifiedCL) / Point, 0, 20, "Take position against overshoot");
         isSuccess = isSuccess && tpresult;
       }
-      againstEntried = isSuccess;
-    } } }
-    if (followEntried) {
-      if (overshootLevel > OSFollowStopLevel) {
-        ClosePosition(Symbol(), MagicNumber, OP_SELL, "Close by too overshoot");
-      }
-    }
-    else if (currentLevel > OSFollowEntryLevel ) { if (overshootLevel < OSFollowStopLevel ) {
-      for (lots = GetLots() - GetPositionLots(Symbol(), MagicNumber, OP_SELL); lots > 0; lots -= l) {
-        l = MathMin(lots, MarketInfo(Symbol(), MODE_MAXLOT));
-        tpresult = TakePosition(Symbol(), MagicNumber, OP_SELL, l, Bid * FollowSLFactor , 0, 20, "Take position follow overshoot" );
-        isSuccess = isSuccess && tpresult;
-      }
-      followEntried = isSuccess;
+      entried = isSuccess;
     } }
   }
   else if (mode ==  1) {
-    if (!againstEntried) { if (currentLevel > OSAgainstEntryLevel) { if (overshootLevel < OSAgainstStopLevel) {
+    if (modifiedCL > OSAgainstEntryLevel) { if (modifiedOL < OSAgainstStopLevel) {
       for (lots = GetLots() - GetPositionLots(Symbol(), MagicNumber, OP_SELL); lots > 0; lots -= l) {
         l = MathMin(lots, MarketInfo(Symbol(), MODE_MAXLOT));
-        tpresult = TakePosition(Symbol(), MagicNumber, OP_SELL, l, Bid * DCThreshold * (OSAgainstStopLevel - currentLevel) / Point, 0, 20, "Take position against overshoot");
+        tpresult = TakePosition(Symbol(), MagicNumber, OP_SELL, l, Bid * DCThreshold * (OSAgainstStopLevel - modifiedCL) / Point, 0, 20, "Take position against overshoot");
         isSuccess = isSuccess && tpresult;
       }
-      againstEntried = isSuccess;
-    } } }
-    if (followEntried) {
-      if (overshootLevel > OSFollowStopLevel) {
-        ClosePosition(Symbol(), MagicNumber, OP_BUY, "Close by too overshoot");
-      }
-    }
-    else if (currentLevel > OSFollowEntryLevel ) { if (overshootLevel < OSFollowStopLevel ) {
-      for (lots = GetLots() - GetPositionLots(Symbol(), MagicNumber, OP_SELL); lots > 0; lots -= l) {
-        l = MathMin(lots, MarketInfo(Symbol(), MODE_MAXLOT));
-        tpresult = TakePosition(Symbol(), MagicNumber, OP_BUY , l, Ask * FollowSLFactor , 0, 20, "Take position follow overshoot" );
-        isSuccess = isSuccess && tpresult;
-      }
-      followEntried = isSuccess;
+      entried = isSuccess;
     } }
   }
 
@@ -106,8 +89,9 @@ void UpdateDCOS() {
       dcPrice = x;
       currentLevel = 0;
       overshootLevel = 0;
-      againstEntried = false;
-      followEntried = false;
+      overshootLevelPeak = 0;
+      overshootLevelDrawdown = 0;
+      entried = false;
     }
     else {
       currentLevel = (dcPrice - x) / DCThreshold;
@@ -126,8 +110,9 @@ void UpdateDCOS() {
       dcPrice = x;
       currentLevel = 0;
       overshootLevel = 0;
-      againstEntried = false;
-      followEntried = false;
+      overshootLevelPeak = 0;
+      overshootLevelDrawdown = 0;
+      entried = false;
     }
     else {
       currentLevel = (x - dcPrice) / DCThreshold;
@@ -190,8 +175,27 @@ void UpdateDCOS() {
       }
     }
 
-    againstEntried = false;
-    followEntried = false;
+    entried = false;
+  }
+
+  double dd = overshootLevel - currentLevel;
+  if (dd > overshootLevelDrawdown) {
+    overshootLevelPeak = overshootLevel;
+    overshootLevelDrawdown = dd;
+  }
+  modifiedCL = currentLevel;
+  modifiedOL = overshootLevel;
+  double m = 0;
+  if (overshootLevelDrawdown > OSDrawdownFilter) {
+    if (EntryAfterFiltered) {
+      m = overshootLevelDrawdown - overshootLevelPeak - 1.0;
+      modifiedCL = currentLevel + m;
+      modifiedOL = overshootLevel + m;
+    }
+    else {
+      modifiedCL = OSAgainstStopLevel;
+      modifiedOL = OSAgainstStopLevel;
+    }
   }
 
   if (!IsTesting() && !IsOptimization()) {
@@ -212,39 +216,22 @@ void UpdateDCOS() {
 
     comment = comment + "Next DC: " + DoubleToStr(MathExp(extremaPrice - mode * DCThreshold), Digits);
     comment = comment + " / Next action: ";
-    if (overshootLevel <= OSAgainstEntryLevel) {
+    if (!entried && modifiedOL < OSAgainstEntryLevel) {
       if (mode == 1) {
-        comment = comment + "AGAINST SELL @ " + DoubleToStr(MathExp(dcPrice + DCThreshold * OSAgainstEntryLevel), Digits);
+        comment = comment + "AGAINST SELL @ " + DoubleToStr(MathExp(dcPrice + DCThreshold * (OSAgainstEntryLevel - m)), Digits);
       }
       else {
-        comment = comment + "AGAINST BUY @ " + DoubleToStr(MathExp(dcPrice - DCThreshold * OSAgainstEntryLevel), Digits);
+        comment = comment + "AGAINST BUY @ " + DoubleToStr(MathExp(dcPrice - DCThreshold * (OSAgainstEntryLevel - m)), Digits);
       }
     }
-    else if (overshootLevel > OSAgainstEntryLevel && overshootLevel <= OSAgainstStopLevel) {
+    else if (entried && modifiedOL > OSAgainstEntryLevel && modifiedOL < OSAgainstStopLevel) {
       comment = comment + "TAKE PROFIT @ " + DoubleToStr(MathExp(extremaPrice - mode * DCThreshold), Digits);
       if (mode == 1) {
-        comment = comment + " / STOP LOSS @ " + DoubleToStr(MathExp(dcPrice + DCThreshold * OSAgainstStopLevel), Digits);
+        comment = comment + " / STOP LOSS @ " + DoubleToStr(MathExp(dcPrice + DCThreshold * (OSAgainstStopLevel - m)), Digits);
       }
       else {
-        comment = comment + " / STOP LOSS @ " + DoubleToStr(MathExp(dcPrice - DCThreshold * OSAgainstStopLevel), Digits);
+        comment = comment + " / STOP LOSS @ " + DoubleToStr(MathExp(dcPrice - DCThreshold * (OSAgainstStopLevel - m)), Digits);
       }
-    }
-    else if (overshootLevel > OSAgainstStopLevel && overshootLevel <= OSFollowEntryLevel) {
-      if (mode == 1) {
-        comment = comment + "FOLLOW BUY @ " + DoubleToStr(MathExp(dcPrice + DCThreshold * OSFollowEntryLevel), Digits);
-      }
-      else {
-        comment = comment + "FOLLOW SELL @ " + DoubleToStr(MathExp(dcPrice - DCThreshold * OSFollowEntryLevel), Digits);
-      }
-    }
-    else if (overshootLevel > OSFollowEntryLevel && overshootLevel <= OSFollowStopLevel) {
-      if (mode == 1) {
-        comment = comment + "TAKE PROFIT @ " + DoubleToStr(MathExp(dcPrice + DCThreshold * OSFollowStopLevel), Digits);
-      }
-      else {
-        comment = comment + "TAKE PROFIT @ " + DoubleToStr(MathExp(dcPrice - DCThreshold * OSFollowStopLevel), Digits);
-      }
-      comment = comment + " / STOP LOSS @ " + DoubleToStr(MathExp(extremaPrice - mode * DCThreshold), Digits);
     }
     else {
       comment = comment + "NONE";
@@ -260,13 +247,35 @@ void UpdateDCOS() {
 
 int init() {
   OSAgainstStopLevel = OSAgainstEntryLevel + OSAgainstStopOffset;
-
   NextWeekendDatetime = GetNextWeekendDatetime(TimeCurrent(), GMTOffset);
-  FollowSLFactor = DCThreshold / Point;
   return(0);
 }
 
 int deinit() {
+  if (!IsTesting()) {
+    return(0);
+  }
+  int handle = FileOpen("Strategy1Log.csv", FILE_CSV | FILE_WRITE, ',');
+  int n = OrdersHistoryTotal();
+  for (int i = 0; i < n; i++) {
+    OrderSelect(i, SELECT_BY_POS, MODE_HISTORY);
+    int ot = 3, ct = 1;
+    if (OrderType() == OP_SELL) {
+      ot = 1;
+      ct = 3;
+    }
+    FileWrite(handle,
+      StringSetChar(StringSetChar(TimeToStr(OrderOpenTime(), TIME_DATE | TIME_SECONDS), 4, '-'), 7, '-'),
+      ot,
+      OrderOpenPrice()
+    );
+    FileWrite(handle,
+      StringSetChar(StringSetChar(TimeToStr(OrderCloseTime(), TIME_DATE | TIME_SECONDS), 4, '-'), 7, '-'),
+      ct,
+      OrderClosePrice()
+    );
+  }
+  FileClose(handle);
   return(0);
 }
 

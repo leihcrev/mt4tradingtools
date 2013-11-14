@@ -153,13 +153,12 @@ double GetOptimalLots(string symbol, double weight, int stopLossPips) {
  */
 double GetLotsByOptimalF(double OptimalF, double WorstLoss, double SL) {
   // Calculate optional lot size
-  double lotStep = MarketInfo(Symbol(), MODE_LOTSTEP);
-  double l = -AccountBalance() * OptimalF / WorstLoss * lotStep;
+  double lotSize = MarketInfo(Symbol(), MODE_LOTSIZE);
+  double l = -AccountBalance() * OptimalF / WorstLoss / lotSize;
 
   // Check leverage
   int leverage = AccountLeverage();
   double mid = (Ask + Bid) / 2.0;
-  double lotSize = MarketInfo(Symbol(), MODE_LOTSIZE);
   double requiredMargin = mid * (lotSize / leverage + SL * lotSize);
   string ccy = StringSubstr(Symbol(), 3, 3);
   if (AccountCurrency() != ccy) {
@@ -170,6 +169,7 @@ double GetLotsByOptimalF(double OptimalF, double WorstLoss, double SL) {
   }
   
   // Round
+  double lotStep = MarketInfo(Symbol(), MODE_LOTSTEP);
   l = MathFloor(l / lotStep) * lotStep;
 
   return(l);
