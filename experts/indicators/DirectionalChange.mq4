@@ -207,7 +207,7 @@ int start() {
       }
       if (overshootLevel[0] > 0 && MathFloor(prevLevel) != MathFloor(overshootLevel[0])) {
         // OS is updated
-        PutOSLabel(MathFloor(overshootLevel), TimeCurrent(), x);
+        PutOSLabel(MathFloor(overshootLevel[0]), TimeCurrent(), x);
       }
     }
     else {
@@ -263,25 +263,28 @@ void GetPricesFromBar(double &prices[], int i, double spread) {
 
 void MoveExtremaLabel(double time, double logprice) {
   ObjectDelete("Extrema");
-  ObjectCreate("Extrema", OBJ_TEXT, 0, time, MathExp(logprice));
-  ObjectSetText("Extrema", "EXT", 6, "Small Fonts", White);
+  double price = MathExp(logprice);
+  ObjectCreate("Extrema", OBJ_TEXT, 0, time, price);
+  ObjectSetText("Extrema", "EXT(" + DoubleToStr(price, Digits) + ")", 6, "Small Fonts", White);
 }
 
 void PutOldExtremaLabel(double time, double logprice) {
   string objectId = "Extrema at " + TimeToStr(time, TIME_DATE | TIME_SECONDS);
-  ObjectCreate(objectId, OBJ_TEXT, 0, time, MathExp(logprice));
-  ObjectSetText(objectId, "EXT", 6, "Small Fonts", White);
+  double price = MathExp(logprice);
+  ObjectCreate(objectId, OBJ_TEXT, 0, time, price);
+  ObjectSetText(objectId, "EXT(" + DoubleToStr(price, Digits) + ")", 6, "Small Fonts", White);
 }
 
 void PutDCLabel(int m, double time, double logprice) {
   string objectId = "Directional change at " + TimeToStr(time, TIME_DATE | TIME_SECONDS);
-  ObjectCreate(objectId, OBJ_TEXT, 0, time, MathExp(logprice));
+  double price = MathExp(logprice);
+  ObjectCreate(objectId, OBJ_TEXT, 0, time, price);
   string label;
   if (m == 1) {
-    label = "DC(UP)";
+    label = "DC UP(" + DoubleToStr(price, Digits) + ")";
   }
   else {
-    label = "DC(DOWN)";
+    label = "DC DOWN(" + DoubleToStr(price, Digits) + ")";
   }
   ObjectSetText(objectId, label, 6, "Small Fonts", White);
 }
