@@ -32,7 +32,7 @@ double LambertW0(double x) {
           W -= MathLog(W);
         }
       }
-      return(LambertW_Fritsch("LambertW0(x=" + DoubleToStr(x, 8) + ")", x, W));
+      return(LambertW_Halley("LambertW0(x=" + DoubleToStr(x, 8) + ")", x, W));
     }
   }
 }
@@ -56,26 +56,26 @@ double LambertWm1(double x) {
     else {
       double l1 = MathLog(-x);
       double l2 = MathLog(-l1);
-      return(LambertW_Fritsch("LambertWm1(x=" + DoubleToStr(x, 8) + ")", x, l1 - l2 + l2 / l1));
+      return(LambertW_Halley("LambertWm1(x=" + DoubleToStr(x, 8) + ")", x, l1 - l2 + l2 / l1));
     }
   }
 }
 
-double LambertW_Fritsch(string caller, double x, double W) {
-  if (W == 0.0) {
-    Print(caller, " -> LambertW_Fritsch(x=", DoubleToStr(x, 8), ", W=", DoubleToStr(W, 8), "): W should not be 0.");
-  }
-  if (x / W < 0) {
-    Print(caller, " -> LambertW_Fritsch(x=", DoubleToStr(x, 8), ", W=", DoubleToStr(W, 8), "): x and W shoule be same sign.");
-  }
-  double z = MathLog(x / W) - W;
-  double q = 2 * (1 + W) * (1 + W + 2 * z / 3);
-  double eps = z / (1 + W) * (q - z) / (q - 2 * z);
-  while (PRECISION < MathAbs(eps)) {
-    W += W * eps;
-    z = MathLog(x / W) - W;
-    q = 2 * (1 + W) * (1 + W + 2 * z / 3);
-    eps = z / (1 + W) * (q - z) / (q - 2 * z);
+double LambertW_Halley(string caller, double x, double W) {
+  while (true) {
+    double e = MathExp(W);
+    double p = W + 1.0;
+    double t = W * e - x;
+    if (W > 0) {
+      t = (t / p) / e;
+    }
+    else {
+      t /= e * p - 0.5 * (p + 1.0) * t / p;
+    }
+    W -= t;
+    if (MathAbs(t) < PRECISION) {
+      break;
+    }
   }
   return(W);
 }
