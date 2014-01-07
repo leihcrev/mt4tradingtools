@@ -5,19 +5,15 @@
 #define INDICATOR_NAME "WinningRatio"
 
 #property indicator_separate_window
-#property indicator_buffers 1
+#property indicator_buffers 3
 
-#property indicator_maximum 0.6
-#property indicator_minimum 0.4
+#property indicator_maximum 1
+#property indicator_minimum 0
 #property indicator_level1 0.5
 
 #property indicator_color1 White
-
-#property indicator_style2 2
-#property indicator_style3 2
-#property indicator_style4 2
-#property indicator_style5 2
-#property indicator_style6 2
+#property indicator_color2 Blue
+#property indicator_color3 Red
 
 #include <IndicatorUtils.mqh>
 #include <DirectionalChange.mqh>
@@ -46,6 +42,8 @@ double   HeightInv;
 
 // Buffers
 double WinningRatio[];
+double OptimalF[];
+double BetRatio[];
 
 int init() {
   IndicatorShortName(INDICATOR_NAME);
@@ -54,6 +52,10 @@ int init() {
   
   SetIndexBuffer(0, WinningRatio);
   SetIndexLabel(0, "WinningRatio");
+  SetIndexBuffer(1, OptimalF);
+  SetIndexLabel(1, "OptimalF");
+  SetIndexBuffer(2, BetRatio);
+  SetIndexLabel(2, "BetRatio");
 
   threshold[0] = Threshold;
   OvershootECDF_Read(Symbol(), Threshold, level, count);
@@ -132,10 +134,23 @@ void UpdateBuffer(int i, double x, double spread) {
   }
   double WR = 1.0 / (MathPow(logOSP / lamb, Height) + 1.0);
   WR = WR - (WR - 0.5) * drawdown / Height;
+
   if (mode[0] == -1) {
     WR = 1.0 - WR;
   }
   WinningRatio[i] = WR;
+
+  if (WR < 0.5) {
+    WR = 1.0 - WR;
+  }
+  double h = x * Threshold * Height;
+  double s = spread / 2.0;
+  OptimalF[i] = WR - (h + s)  / (h - s) * (1.0 - WR);
+  if (OptimalF[i] < 0.0) {
+    OptimalF[i] = 0.0;
+  }
+
+  BetRatio[i] = OptimalF[i] * MarketInfo(Symbol(), MODE_MARGINREQUIRED) / ((h + s) * MarketInfo(Symbol(), MODE_LOTSIZE));
 }
 
 void GetPricesFromBar(double &prices[], int i, double spread) {
