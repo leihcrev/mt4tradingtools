@@ -187,12 +187,12 @@ void TweetTakeProfitOrStopLoss(string symbol, int magicNumber) {
     double cp = OrderClosePrice();
     double tp = OrderTakeProfit();
     double sl = OrderStopLoss();
-    if (OrderType() == OP_BUY && cp != 0 && tp != 0 && cp >= tp
-      || OrderType() == OP_SELL && cp != 0 && tp != 0 && cp <= tp) {
+    if ((OrderType() == OP_BUY && cp != 0 && tp != 0 && cp >= tp)
+      || (OrderType() == OP_SELL && cp != 0 && tp != 0 && cp <= tp)) {
       TweetClosePosition(OrderTicket(), "Take profit");
     }
-    else if (OrderType() == OP_BUY && cp != 0 && sl != 0 && cp <= sl
-      || OrderType() == OP_SELL && cp != 0 && sl != 0 && cp >= sl) {
+    else if ((OrderType() == OP_BUY && cp != 0 && sl != 0 && cp <= sl)
+      || (OrderType() == OP_SELL && cp != 0 && sl != 0 && cp >= sl)) {
       TweetClosePosition(OrderTicket(), "Stop loss");
     }
   }

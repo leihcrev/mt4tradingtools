@@ -24,7 +24,7 @@ double modifiedOL;
 // -- For avoid weekend
 datetime NextWeekendDatetime = 0;
 
-void start() {
+int start() {
   TweetTakeProfitOrStopLoss(Symbol(), MagicNumber);
 
   UpdateDCOS();

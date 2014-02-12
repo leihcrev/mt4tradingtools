@@ -4,7 +4,7 @@ extern double DCThreshold         =  0.00340;
 extern double OSAgainstEntryLevel =  2.12555593;
 extern double OSAgainstStopOffset =  1.36364738;
 extern double OSDrawdownFilter    =  0.70655036;
-extern bool   EntryAfterFiltered  = false;
+extern bool   EntryAfterFiltered  = true;
 extern double GMTOffset           =  9.0;
 extern double WeekendMarginSecs   = 0;
 extern string OrderParameters     = "==== Order parameters ====";

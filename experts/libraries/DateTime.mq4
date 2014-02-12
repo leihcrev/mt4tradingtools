@@ -146,6 +146,7 @@ bool _IsTokyoHoliday(int y, int m, int d, int w) {
       }
       return(false);
   }
+  return(false);
 }
 
 /**
@@ -545,6 +546,7 @@ bool IsNewyorkSummerTimeSeason(datetime dt) {
     case 12:
       return(false);
   }
+  return(false);
 }
 
 /**
@@ -578,6 +580,7 @@ int GetLastDayOfMonth(datetime dt) {
     case 12:
       return(31);
   }
+  return(0);
 }
 
 /**
