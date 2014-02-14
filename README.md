@@ -18,7 +18,7 @@ This EA takes the position when *overshoot* detected and closes when *overshoot*
     - Start MT4
     - Click File - Open Data Folder
     - Copy `experts\*.mq4` to Experts in the above folder
-    - Copy `experts\files\*.*` to Includes
+    - Copy `experts\files\*.*` to Files
     - Do in the same manner for include, indicators, libraries, scripts.
 3. Start EA
  * Open M1 chart of USDJPY
