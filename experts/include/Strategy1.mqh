@@ -1,6 +1,7 @@
 // Strategy1
 #property copyright "KIKUCHI Shunsuke"
 #property link      "http://sites.google.com/site/leihcrev/"
+#property strict
 
 #include <Position.mqh>
 #include <Tweet.mqh>
@@ -21,6 +22,11 @@ bool entried = false;
 double modifiedCL;
 double modifiedOL;
 
+// -- For tick continuity
+int tickContinuity = 0;
+int continuitySide = 0;
+double previousMid = 0.0;
+
 // -- For avoid weekend
 datetime NextWeekendDatetime = 0;
 
@@ -28,6 +34,7 @@ int start() {
   TweetTakeProfitOrStopLoss(Symbol(), MagicNumber);
 
   UpdateDCOS();
+  CountTickContinuity();
 
   if (WeekendMarginSecs != 0) {
     datetime now = TimeCurrent();
@@ -42,6 +49,20 @@ int start() {
   }
 
   if (entried) {
+    if (MoveSLWhenDD && overshootLevel - currentLevel > OSDrawdownFilter) {
+      for (int pos = OrdersTotal(); pos >= 0; pos--) {
+        if (!OrderSelect(pos, SELECT_BY_POS)) {
+          continue;
+        }
+        double sign = OrderType() == OP_BUY ? 1 : 0;
+        double sl = NormalizeDouble(MathExp(extremaPrice) + sign * SLDistanceWhenDD, Digits);
+        if (OrderSymbol() == Symbol() && OrderMagicNumber() == MagicNumber && sign * (OrderStopLoss() - sl) < 0) {
+          if (!OrderModify(OrderTicket(), OrderOpenPrice(), sl, OrderTakeProfit(), OrderExpiration())) {
+            Print("Cannot modify StopLoss. ticket=", OrderTicket());
+          }
+        }
+      }
+    }
     return(0);
   }
   if (overshootLevel < OSAgainstEntryLevel) {
@@ -49,27 +70,31 @@ int start() {
     return(0);
   }
 
-  double lots, l;
+  double lots, l = 0.0;
   bool isSuccess = true, tpresult;
   if (mode == -1) {
-    if (modifiedCL > OSAgainstEntryLevel) { if (modifiedOL < OSAgainstStopLevel) {
-      for (lots = GetLots() - GetPositionLots(Symbol(), MagicNumber, OP_BUY); lots > 0; lots -= l) {
-        l = MathMin(lots, MarketInfo(Symbol(), MODE_MAXLOT));
-        tpresult = TakePosition(Symbol(), MagicNumber, OP_BUY , l, Ask * DCThreshold * (OSAgainstStopLevel - modifiedCL) / Point, 0, 20, "Take position against overshoot");
-        isSuccess = isSuccess && tpresult;
+    if (modifiedCL > OSAgainstEntryLevel && modifiedOL < OSAgainstStopLevel) {
+      if (TimeCurrent() < UseContinuityFrom || continuitySide >= 0 || tickContinuity < ContinuityThreshold) {
+        for (lots = GetLots() - GetPositionLots(Symbol(), MagicNumber, OP_BUY); lots > 0; lots -= l) {
+          l = MathMin(lots, MarketInfo(Symbol(), MODE_MAXLOT));
+          tpresult = TakePosition(Symbol(), MagicNumber, OP_BUY , l, Ask * DCThreshold * (OSAgainstStopLevel - modifiedCL) * MathPow(10, Digits), 0, 20, "Take position against overshoot");
+          isSuccess = isSuccess && tpresult;
+        }
+        entried = isSuccess;
       }
-      entried = isSuccess;
-    } }
+    }
   }
   else if (mode ==  1) {
-    if (modifiedCL > OSAgainstEntryLevel) { if (modifiedOL < OSAgainstStopLevel) {
-      for (lots = GetLots() - GetPositionLots(Symbol(), MagicNumber, OP_SELL); lots > 0; lots -= l) {
-        l = MathMin(lots, MarketInfo(Symbol(), MODE_MAXLOT));
-        tpresult = TakePosition(Symbol(), MagicNumber, OP_SELL, l, Bid * DCThreshold * (OSAgainstStopLevel - modifiedCL) / Point, 0, 20, "Take position against overshoot");
-        isSuccess = isSuccess && tpresult;
+    if (modifiedCL > OSAgainstEntryLevel && modifiedOL < OSAgainstStopLevel) {
+      if (TimeCurrent() < UseContinuityFrom || continuitySide <= 0 || tickContinuity < ContinuityThreshold) {
+        for (lots = GetLots() - GetPositionLots(Symbol(), MagicNumber, OP_SELL); lots > 0; lots -= l) {
+          l = MathMin(lots, MarketInfo(Symbol(), MODE_MAXLOT));
+          tpresult = TakePosition(Symbol(), MagicNumber, OP_SELL, l, Bid * DCThreshold * (OSAgainstStopLevel - modifiedCL) * MathPow(10, Digits), 0, 20, "Take position against overshoot");
+          isSuccess = isSuccess && tpresult;
+        }
+        entried = isSuccess;
       }
-      entried = isSuccess;
-    } }
+    }
   }
 
   return(0);
@@ -126,7 +151,8 @@ void UpdateDCOS() {
     double loext = x;
     double hiext = x;
     double loglo, loghi;
-    for (int i = 0; i < Bars; i++) {
+    int i;
+    for (i = 0; i < Bars; i++) {
       loglo = MathLog(Low[i]);
       loghi = MathLog(High[i]);
       if (loglo < loext) {
@@ -245,6 +271,40 @@ void UpdateDCOS() {
   }
 }
 
+void CountTickContinuity() {
+  double currentMid = (Bid + Ask) / 2.0;
+  if (currentMid == previousMid) {
+    return;
+  }
+
+  if (continuitySide > 0) {
+    if (previousMid < currentMid) {
+      tickContinuity++;
+    }
+    else {
+      continuitySide = -1;
+      tickContinuity = 1;
+    }
+  }
+  else if (continuitySide < 0) {
+    if (previousMid > currentMid) {
+      tickContinuity++;
+    }
+    else {
+      continuitySide = 1;
+      tickContinuity = 1;
+    }
+  }
+  else {
+    if (previousMid != 0.0) {
+      continuitySide = previousMid < currentMid ? 1 : previousMid > currentMid ? -1 : 0;
+      tickContinuity = 1;
+    }
+  }
+
+  previousMid = currentMid;
+}
+
 int init() {
   OSAgainstStopLevel = OSAgainstEntryLevel + OSAgainstStopOffset;
   NextWeekendDatetime = GetNextWeekendDatetime(TimeCurrent(), GMTOffset);
@@ -258,7 +318,9 @@ int deinit() {
   int handle = FileOpen("Strategy1Log.csv", FILE_CSV | FILE_WRITE, ',');
   int n = OrdersHistoryTotal();
   for (int i = 0; i < n; i++) {
-    OrderSelect(i, SELECT_BY_POS, MODE_HISTORY);
+    if (!OrderSelect(i, SELECT_BY_POS, MODE_HISTORY)) {
+      continue;
+    }
     int ot = 3, ct = 1;
     if (OrderType() == OP_SELL) {
       ot = 1;
@@ -267,12 +329,12 @@ int deinit() {
     FileWrite(handle,
       StringSetChar(StringSetChar(TimeToStr(OrderOpenTime(), TIME_DATE | TIME_SECONDS), 4, '-'), 7, '-'),
       ot,
-      OrderOpenPrice()
+      DoubleToString(OrderOpenPrice(), Digits)
     );
     FileWrite(handle,
       StringSetChar(StringSetChar(TimeToStr(OrderCloseTime(), TIME_DATE | TIME_SECONDS), 4, '-'), 7, '-'),
       ct,
-      OrderClosePrice()
+      DoubleToString(OrderOpenPrice(), Digits)
     );
   }
   FileClose(handle);
