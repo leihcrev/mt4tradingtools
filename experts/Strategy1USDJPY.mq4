@@ -1,9 +1,9 @@
 // Input parameters
 extern string StrategyParameters  = "==== Strategy parameters ====";
-extern double DCThreshold         =  0.00292;
-extern double OSAgainstEntryLevel =  1.23438700;
-extern double OSAgainstStopOffset =  1.90137109;
-extern double OSDrawdownFilter    =  0.66426088;
+extern double DCThreshold         =  0.00296;
+extern double OSAgainstEntryLevel =  1.69;
+extern double OSAgainstStopOffset =  1.00;
+extern double OSDrawdownFilter    =  0.63212056;
 extern bool   EntryAfterFiltered  = true;
 extern int    ContinuityThreshold = 0;
 extern datetime UseContinuityFrom = D'2010.10.25 00:00:00';
@@ -12,8 +12,8 @@ extern double SLDistanceWhenDD    =  0.170;
 extern double GMTOffset           =  9.0;
 extern double WeekendMarginSecs   = 0;
 extern string OrderParameters     = "==== Order parameters ====";
-extern double OptimalF            = 0.31316174; // ComfortableF=0.28803008, Leverage25F=0.17428598
-extern double WorstLoss           = -0.68849934;
+extern double OptimalF            = 0.20288085;
+extern double WorstLoss           = -0.296;
 extern double Lots                = 0.0;
 extern int    MagicNumber         = 1;
 

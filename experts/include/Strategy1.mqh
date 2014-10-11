@@ -348,3 +348,84 @@ double GetLots() {
   return(Lots);
 }
 
+double OnTester() {
+  int n = OrdersHistoryTotal();
+  double hpr[1];
+  ArrayResize(hpr, n);
+  double min = 99999999, max = -99999999;
+  for (int i = 0; i < n; i++) {
+    if (!OrderSelect(i, SELECT_BY_POS, MODE_HISTORY)) {
+      continue;
+    }
+    double r = OrderClosePrice() - OrderOpenPrice();
+    if (OrderType() == OP_SELL) {
+      r = -r;
+    }
+    hpr[i] = r / (OrderOpenPrice() * DCThreshold * OSAgainstStopOffset);
+    if (hpr[i] < min) {
+      min = hpr[i];
+    }
+    if (hpr[i] > max) {
+      max = hpr[i];
+    }
+  }
+  Print("hpr range=(", min, ", ", max, ")");
+
+  return(OptimizeTWR(n, hpr));
+}
+
+double OptimizeTWR(int n, double &hpr[]) {
+  double f_inf = 0.25;
+  double f = 0.5;
+  double f_sup = 0.75;
+  double eps = 0.0001;
+  
+  double twr_inf = CalculateTWR(n, hpr, f_inf);
+  double twr = CalculateTWR(n, hpr, f);
+  double twr_sup = CalculateTWR(n, hpr, f_sup);
+  while (f_sup - f_inf > eps) {
+    Print(f_inf, "<", f, "<", f_sup, "/", twr_inf, " ", twr, " ", twr_sup);
+    if (twr_inf <= twr && twr <= twr_sup) {
+      f_inf = f;
+      twr_inf = twr;
+      f = f_sup;
+      twr = twr_sup;
+      f_sup = f_sup + (f_sup - f_inf);
+      if (f_sup > 1.0) {
+        f_sup = 1.0;
+      }
+      twr_sup = CalculateTWR(n, hpr, f_sup);
+    }
+    else if (twr_inf <= twr && twr >= twr_sup) {
+      f_inf = f_inf + (f - f_inf) / 2.0;
+      twr_inf = CalculateTWR(n, hpr, f_inf);
+      f_sup = f_sup - (f_sup - f) / 2.0;
+      twr_sup = CalculateTWR(n, hpr, f_sup);
+    }
+    else {
+      f_sup = f;
+      twr_sup = twr;
+      f = f_inf;
+      twr = twr_inf;
+      f_inf = f_inf - (f_sup - f_inf);
+      if (f_inf < 0.0) {
+        f_inf = 0.0;
+      }
+      twr_inf = CalculateTWR(n, hpr, f_inf);
+    }
+  }
+
+  Print("OptimalF=", f, "/TWR=", twr);
+  return(twr);
+}
+
+double CalculateTWR(int n, double &hpr[], double f) {
+  double twr = 1.0;
+  for (int i = 0; i < n; i++) {
+    twr *= 1.0 + hpr[i] * f;
+  }
+  if (MathIsValidNumber(twr)) {
+    return(twr);
+  }
+  return(0);
+}
