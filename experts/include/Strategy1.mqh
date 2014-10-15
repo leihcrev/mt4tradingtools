@@ -75,7 +75,7 @@ int start() {
   if (mode == -1) {
     if (modifiedCL > OSAgainstEntryLevel && modifiedOL < OSAgainstStopLevel) {
       if (TimeCurrent() < UseContinuityFrom || continuitySide >= 0 || tickContinuity < ContinuityThreshold) {
-        for (lots = GetLots() - GetPositionLots(Symbol(), MagicNumber, OP_BUY); lots > 0; lots -= l) {
+        for (lots = GetLots(Ask) - GetPositionLots(Symbol(), MagicNumber, OP_BUY); lots > 0; lots -= l) {
           l = MathMin(lots, MarketInfo(Symbol(), MODE_MAXLOT));
           tpresult = TakePosition(Symbol(), MagicNumber, OP_BUY , l, Ask * DCThreshold * (OSAgainstStopLevel - modifiedCL) * MathPow(10, Digits), 0, 20, "Take position against overshoot");
           isSuccess = isSuccess && tpresult;
@@ -87,7 +87,7 @@ int start() {
   else if (mode ==  1) {
     if (modifiedCL > OSAgainstEntryLevel && modifiedOL < OSAgainstStopLevel) {
       if (TimeCurrent() < UseContinuityFrom || continuitySide <= 0 || tickContinuity < ContinuityThreshold) {
-        for (lots = GetLots() - GetPositionLots(Symbol(), MagicNumber, OP_SELL); lots > 0; lots -= l) {
+        for (lots = GetLots(Ask) - GetPositionLots(Symbol(), MagicNumber, OP_SELL); lots > 0; lots -= l) {
           l = MathMin(lots, MarketInfo(Symbol(), MODE_MAXLOT));
           tpresult = TakePosition(Symbol(), MagicNumber, OP_SELL, l, Bid * DCThreshold * (OSAgainstStopLevel - modifiedCL) * MathPow(10, Digits), 0, 20, "Take position against overshoot");
           isSuccess = isSuccess && tpresult;
@@ -264,7 +264,7 @@ void UpdateDCOS() {
     }
     comment = comment + "\n";
 
-    comment = comment + "Optimal lots: " + DoubleToStr(GetLots(), 2);
+    comment = comment + "Optimal lots: " + DoubleToStr(GetLots(Ask), 2);
     comment = comment + "\n";
 
     Comment(comment);
@@ -341,9 +341,9 @@ int deinit() {
   return(0);
 }
 
-double GetLots() {
+double GetLots(double price) {
   if (Lots == 0.0) {
-    return(GetLotsByOptimalF(OptimalF, WorstLoss, DCThreshold * OSAgainstStopOffset));
+    return(GetLotsByOptimalF(OptimalF, -price * DCThreshold * OSAgainstStopOffset, DCThreshold * OSAgainstStopOffset));
   }
   return(Lots);
 }
@@ -352,6 +352,8 @@ double OnTester() {
   int n = OrdersHistoryTotal();
   double hpr[1];
   ArrayResize(hpr, n);
+
+  // Calculate HPR
   double min = 99999999, max = -99999999;
   for (int i = 0; i < n; i++) {
     if (!OrderSelect(i, SELECT_BY_POS, MODE_HISTORY)) {
@@ -371,14 +373,17 @@ double OnTester() {
   }
   Print("hpr range=(", min, ", ", max, ")");
 
-  return(OptimizeTWR(n, hpr));
+  // Calculate sup of OptimalF
+  double supF = Leverage * (DCThreshold * OSAgainstStopOffset) / (1.0 - DCThreshold * OSAgainstStopOffset);
+
+  return(OptimizeTWR(n, hpr, supF));
 }
 
-double OptimizeTWR(int n, double &hpr[]) {
-  double f_inf = 0.25;
-  double f = 0.5;
-  double f_sup = 0.75;
-  double eps = 0.0001;
+double OptimizeTWR(int n, double &hpr[], double supF) {
+  double f_inf = 0.0;
+  double f = (f_inf + supF) / 2.0;
+  double f_sup = supF;
+  double eps = 0.00000001;
   
   double twr_inf = CalculateTWR(n, hpr, f_inf);
   double twr = CalculateTWR(n, hpr, f);
@@ -391,8 +396,8 @@ double OptimizeTWR(int n, double &hpr[]) {
       f = f_sup;
       twr = twr_sup;
       f_sup = f_sup + (f_sup - f_inf);
-      if (f_sup > 1.0) {
-        f_sup = 1.0;
+      if (f_sup > supF) {
+        f_sup = supF;
       }
       twr_sup = CalculateTWR(n, hpr, f_sup);
     }
