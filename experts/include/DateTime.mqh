@@ -30,6 +30,16 @@ bool IsSydneyHoliday(datetime dt);
 bool IsNewyorkSummerTimeSeason(datetime dt);
 
 /**
+ * Return true if given datetime(dt) is in London summer time season.
+ */
+bool IsLondonSummerTimeSeason(datetime dt);
+
+/**
+ * Return true if given datetime(dt) is in Sydney summer time season.
+ */
+bool IsSydneySummerTimeSeason(datetime dt);
+
+/**
  * Return last day of given month.
  */
 int GetLastDayOfMonth(datetime dt);

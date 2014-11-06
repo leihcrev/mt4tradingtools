@@ -9,14 +9,6 @@
  * Return true if given datetime(dt) is Tokyo holiday.
  */
 bool IsTokyoHoliday(datetime dt) {
-  bool isSummerTime = IsNewyorkSummerTimeSeason(dt);
-  if (isSummerTime) {
-    dt -= 6 * 3600;
-  }
-  else {
-    dt -= 7 * 3600;
-  }
-
   // Sunday and Saturday are holiday
   int w = TimeDayOfWeek(dt);
   if (w == 0 || w == 6) {
@@ -187,14 +179,6 @@ int GetDayOfAutumnalEquinox(int y) {
  * Return true if given datetime(dt) is TARGET holiday.
  */
 bool IsTargetHoliday(datetime dt) {
-  bool isSummerTime = IsNewyorkSummerTimeSeason(dt);
-  if (isSummerTime) {
-    dt -= 15 * 3600;
-  }
-  else {
-    dt -= 16 * 3600;
-  }
-
   // Sunday and Saturday are holiday
   int w = TimeDayOfWeek(dt);
   if (w == 0 || w == 6) {
@@ -301,14 +285,6 @@ bool IsEasterSunday(int year, int month, int day) {
  * Return true if given datetime(dt) is New York holiday.
  */
 bool IsNewyorkHoliday(datetime dt) {
-  bool isSummerTime = IsNewyorkSummerTimeSeason(dt);
-  if (isSummerTime) {
-    dt -= 19 * 3600;
-  }
-  else {
-    dt -= 21 * 3600;
-  }
-
   // Sunday and Saturday are holiday
   int w = TimeDayOfWeek(dt);
   if (w == 0 || w == 6) {
@@ -393,14 +369,6 @@ bool IsNewyorkHoliday(datetime dt) {
  * Return true if given datetime(dt) is Sydney holiday.
  */
 bool IsSydneyHoliday(datetime dt) {
-  bool isSummerTime = IsNewyorkSummerTimeSeason(dt);
-  if (isSummerTime) {
-    dt += 2 * 3600;
-  }
-  else {
-    dt += 3 * 3600;
-  }
-
   // Sunday and Saturday are holiday
   int w = TimeDayOfWeek(dt);
   if (w == 0 || w == 6) {
@@ -545,6 +513,70 @@ bool IsNewyorkSummerTimeSeason(datetime dt) {
       }
     case 12:
       return(false);
+  }
+  return(false);
+}
+
+/**
+ * Return true if given datetime(dt) is in London summer time season.
+ */
+bool IsLondonSummerTimeSeason(datetime dt) {
+  switch (TimeMonth(dt)) {
+    case 1:
+    case 2:
+      return(false);
+    case 3:
+      if (TimeDay(dt) - TimeDayOfWeek(dt) < 25) {
+        return(false);
+      }
+      return(true);
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+    case 8:
+    case 9:
+      return(true);
+    case 10:
+      if (TimeDay(dt) - TimeDayOfWeek(dt) < 25) {
+        return(true);
+      }
+      return(false);
+    case 11:
+    case 12:
+      return(false);
+  }
+  return(false);
+}
+
+/**
+ * Return true if given datetime(dt) is in Sydney summer time season.
+ */
+bool IsSydneySummerTimeSeason(datetime dt) {
+  switch (TimeMonth(dt)) {
+    case 1:
+    case 2:
+    case 3:
+      return(true);
+    case 4:
+      if (TimeDay(dt) - TimeDayOfWeek(dt) < 8) {
+        return(false);
+      }
+      return(true);
+    case 5:
+    case 6:
+    case 7:
+    case 8:
+    case 9:
+      return(false);
+    case 10:
+      if (TimeDay(dt) - TimeDayOfWeek(dt) < 8) {
+        return(false);
+      }
+      return(true);
+    case 11:
+    case 12:
+      return(true);
   }
   return(false);
 }
