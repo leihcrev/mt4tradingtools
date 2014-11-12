@@ -1,6 +1,8 @@
-// DirectionalChange
+// OvershootLevel
 #property copyright "KIKUCHI Shunsuke"
 #property link      "https://sites.google.com/site/leihcrev/"
+
+#property strict
 
 #property indicator_separate_window
 #property indicator_buffers 4
@@ -18,8 +20,11 @@
 #include <IndicatorUtils.mqh>
 #include <DirectionalChange.mqh>
 
-#define OBJNAME_AGAINST_ENTRY_LINE "Against Entry Line"
-#define OBJNAME_DCLINE "Take Profit Line"
+#define OBJNAME_LINE_BASE       "OvershootLevel_BASE"
+#define OBJNAME_LINE_DC         "OvershootLevel_DC"
+#define OBJNAME_LINE_EXT        "OvershootLevel_EXT"
+#define OBJNAME_LINE_ENTRY_BUY  "OvershootLevel_ENTRY_BUY"
+#define OBJNAME_LINE_ENTRY_SELL "OvershootLevel_ENTRY_SELL"
 
 // Input parameters
 extern double DCThreshold         = 0.00292;
@@ -77,7 +82,11 @@ int init() {
 int deinit() {
   if (!IsOptimization() && !IsTesting()) {
     ObjectsDeleteAll(0, OBJ_TEXT);
-    ObjectDelete(OBJNAME_DCLINE);
+    ObjectDelete(OBJNAME_LINE_BASE);
+    ObjectDelete(OBJNAME_LINE_DC);
+    ObjectDelete(OBJNAME_LINE_EXT);
+    ObjectDelete(OBJNAME_LINE_ENTRY_BUY);
+    ObjectDelete(OBJNAME_LINE_ENTRY_SELL);
   }
 
   return(0);
@@ -131,7 +140,7 @@ int start() {
             }
             if (overshootLevel[0] > 0 && MathFloor(prevLevel) != MathFloor(overshootLevel[0])) {
               // OS is updated
-              PutOSLabel(MathFloor(overshootLevel[0]), Time[i], prices[j]);
+              PutOSLabel((int) MathFloor(overshootLevel[0]), Time[i], prices[j]);
             }
           }
           else {
@@ -198,6 +207,7 @@ int start() {
   }
 
   if (!IsTesting() && !IsOptimization()) {
+    // Plot labels
     if (mode[0] == prevMode) {
       // DC is not occured
       if (extremaPrice[0] != prevExtremaPrice) {
@@ -207,7 +217,7 @@ int start() {
       }
       if (overshootLevel[0] > 0 && MathFloor(prevLevel) != MathFloor(overshootLevel[0])) {
         // OS is updated
-        PutOSLabel(MathFloor(overshootLevel[0]), TimeCurrent(), x);
+        PutOSLabel((int) MathFloor(overshootLevel[0]), TimeCurrent(), x);
       }
     }
     else {
@@ -218,33 +228,35 @@ int start() {
       MoveExtremaLabel(extremaTime, extremaPrice[0]);
     }
 
-    double price = MathExp(extremaPrice[0] - mode[0] * DCThreshold) + mode[0] * (Ask - Bid) / 2.0;
-    if (ObjectFind(OBJNAME_DCLINE) == -1) {
-      ObjectCreate(OBJNAME_DCLINE, OBJ_HLINE, 0, 0, price);
-      ObjectSet(OBJNAME_DCLINE, OBJPROP_COLOR, Blue);
-    }
-    else {
-      ObjectSet(OBJNAME_DCLINE, OBJPROP_PRICE1, price);
-    }
-
+    // Plot lines
+    double spread = (Ask - Bid) / 2.0;
+    PlotLine(OBJNAME_LINE_BASE, MathExp(MathLog(x)      - mode[0] * DCThreshold * (EffectiveOSLevel[0] + 1.0)),                    White);
+    PlotLine(OBJNAME_LINE_DC,   MathExp(extremaPrice[0] - mode[0] * DCThreshold                              ) + mode[0] * spread, Blue);
+    PlotLine(OBJNAME_LINE_EXT,  MathExp(extremaPrice[0]),                                                                          Red);
     if (entried) {
-      ObjectDelete(OBJNAME_AGAINST_ENTRY_LINE);
+      ObjectDelete(OBJNAME_LINE_ENTRY_BUY);
+      ObjectDelete(OBJNAME_LINE_ENTRY_SELL);
     }
     else {
       if (overshootLevel[0] < OSAgainstEntryLevel - m) {
-        price = MathExp(dcPrice[0] + mode[0] * DCThreshold * (OSAgainstEntryLevel - m));
-        if (ObjectFind(OBJNAME_AGAINST_ENTRY_LINE) == -1) {
-          ObjectCreate(OBJNAME_AGAINST_ENTRY_LINE, OBJ_HLINE, 0, 0, price);
-          ObjectSet(OBJNAME_AGAINST_ENTRY_LINE, OBJPROP_COLOR, Lime);
-        }
-        else {
-          ObjectSet(OBJNAME_AGAINST_ENTRY_LINE, OBJPROP_PRICE1, price);
-        }
+        PlotLine(mode[0] == 1 ? OBJNAME_LINE_ENTRY_SELL : OBJNAME_LINE_ENTRY_BUY , MathExp(dcPrice[0]      + mode[0] * DCThreshold * (OSAgainstEntryLevel - m  )), Lime);
+        PlotLine(mode[0] == 1 ? OBJNAME_LINE_ENTRY_BUY  : OBJNAME_LINE_ENTRY_SELL, MathExp(extremaPrice[0] - mode[0] * DCThreshold * (OSAgainstEntryLevel + 1.0)), Lime);
       }
     }
   }
 
   return(0);
+}
+
+void PlotLine(const string objname, const double price, const color clr) {
+  if (ObjectFind(objname) == -1) {
+    ObjectCreate(objname, OBJ_HLINE, 0, 0, price);
+    ObjectSet(objname, OBJPROP_COLOR, clr);
+    ObjectSetString(ChartID(), objname, OBJPROP_TEXT, objname);
+  }
+  else {
+    ObjectSet(objname, OBJPROP_PRICE1, price);
+  }
 }
 
 void GetPricesFromBar(double &prices[], int i, double spread) {
@@ -261,21 +273,21 @@ void GetPricesFromBar(double &prices[], int i, double spread) {
   }
 }
 
-void MoveExtremaLabel(double time, double logprice) {
+void MoveExtremaLabel(datetime time, double logprice) {
   ObjectDelete("Extrema");
   double price = MathExp(logprice);
   ObjectCreate("Extrema", OBJ_TEXT, 0, time, price);
   ObjectSetText("Extrema", "EXT(" + DoubleToStr(price, Digits) + ")", 6, "Small Fonts", White);
 }
 
-void PutOldExtremaLabel(double time, double logprice) {
+void PutOldExtremaLabel(datetime time, double logprice) {
   string objectId = "Extrema at " + TimeToStr(time, TIME_DATE | TIME_SECONDS);
   double price = MathExp(logprice);
   ObjectCreate(objectId, OBJ_TEXT, 0, time, price);
   ObjectSetText(objectId, "EXT(" + DoubleToStr(price, Digits) + ")", 6, "Small Fonts", White);
 }
 
-void PutDCLabel(int m, double time, double logprice) {
+void PutDCLabel(int m, datetime time, double logprice) {
   string objectId = "Directional change at " + TimeToStr(time, TIME_DATE | TIME_SECONDS);
   double price = MathExp(logprice);
   ObjectCreate(objectId, OBJ_TEXT, 0, time, price);
@@ -289,9 +301,9 @@ void PutDCLabel(int m, double time, double logprice) {
   ObjectSetText(objectId, label, 6, "Small Fonts", White);
 }
 
-void PutOSLabel(int level, double time, double price) {
-  string objectId = "Overshoot level " + level + " at " + TimeToStr(time, TIME_DATE | TIME_SECONDS);
+void PutOSLabel(int level, datetime time, double price) {
+  string objectId = "Overshoot level " + IntegerToString(level) + " at " + TimeToStr(time, TIME_DATE | TIME_SECONDS);
   ObjectCreate(objectId, OBJ_TEXT, 0, time, price);
-  ObjectSetText(objectId, "OS(" + level + ")", 6, "Small Fonts", White);
+  ObjectSetText(objectId, "OS(" + IntegerToString(level) + ")", 6, "Small Fonts", White);
 }
 
