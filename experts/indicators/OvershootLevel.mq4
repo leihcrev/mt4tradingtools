@@ -27,10 +27,10 @@
 #define OBJNAME_LINE_ENTRY_SELL "OvershootLevel_ENTRY_SELL"
 
 // Input parameters
-extern double DCThreshold         = 0.00292;
-extern double OSAgainstEntryLevel = 1.23495337;
-extern double OSAgainstStopOffset = 1.89756012;
-extern double OSDrawdownFilter    = 0.66424134;
+extern double DCThreshold         =  0.00299;
+extern double OSAgainstEntryLevel =  1.59;
+extern double OSAgainstStopOffset =  1.00;
+extern double OSDrawdownFilter    =  0.63212056;
 
 // Variables
 double   threshold[1];
@@ -75,6 +75,8 @@ int init() {
   SetLevelValue(2, -1.0);
 
   OSAgainstStopLevel = OSAgainstEntryLevel + OSAgainstStopOffset;
+
+  ChartSetInteger(ChartID(), CHART_SCALEFIX, true);
 
   return(0);
 }
@@ -229,6 +231,8 @@ int start() {
     }
 
     // Plot lines
+    double max = iHighest(Symbol(), Period(), MODE_HIGH, WindowFirstVisibleBar());
+    double min = iLowest(Symbol(), Period(), MODE_LOW, WindowFirstVisibleBar());
     double spread = (Ask - Bid) / 2.0;
     PlotLine(OBJNAME_LINE_BASE, MathExp(MathLog(x)      - mode[0] * DCThreshold * (EffectiveOSLevel[0] + 1.0)),                    White);
     PlotLine(OBJNAME_LINE_DC,   MathExp(extremaPrice[0] - mode[0] * DCThreshold                              ) + mode[0] * spread, Blue);
@@ -239,9 +243,35 @@ int start() {
     }
     else {
       if (overshootLevel[0] < OSAgainstEntryLevel - m) {
-        PlotLine(mode[0] == 1 ? OBJNAME_LINE_ENTRY_SELL : OBJNAME_LINE_ENTRY_BUY , MathExp(dcPrice[0]      + mode[0] * DCThreshold * (OSAgainstEntryLevel - m  )), Lime);
-        PlotLine(mode[0] == 1 ? OBJNAME_LINE_ENTRY_BUY  : OBJNAME_LINE_ENTRY_SELL, MathExp(extremaPrice[0] - mode[0] * DCThreshold * (OSAgainstEntryLevel + 1.0)), Lime);
+        double price;
+        price = MathExp(dcPrice[0]      + mode[0] * DCThreshold * (OSAgainstEntryLevel - m  ));
+        PlotLine(mode[0] == 1 ? OBJNAME_LINE_ENTRY_SELL : OBJNAME_LINE_ENTRY_BUY , price, Lime);
+        if (price > max) {
+          max = price;
+        }
+        if (price < min) {
+          min = price;
+        }
+        price = MathExp(extremaPrice[0] - mode[0] * DCThreshold * (OSAgainstEntryLevel + 1.0));
+        PlotLine(mode[0] == 1 ? OBJNAME_LINE_ENTRY_BUY  : OBJNAME_LINE_ENTRY_SELL, price, Lime);
+        if (price > max) {
+          max = price;
+        }
+        if (price < min) {
+          min = price;
+        }
       }
+    }
+
+    // Change scale
+    double chartPriceMin = ChartGetDouble(ChartID(), CHART_FIXED_MIN);
+    double chartPriceMax = ChartGetDouble(ChartID(), CHART_FIXED_MAX);
+    double margin = (chartPriceMax - chartPriceMin) * 0.05;
+    if (min < chartPriceMin + margin) {
+      ChartSetDouble(ChartID(), CHART_FIXED_MIN, min - margin);
+    }
+    if (max > chartPriceMax - margin) {
+      ChartSetDouble(ChartID(), CHART_FIXED_MAX, max + margin);
     }
   }
 
