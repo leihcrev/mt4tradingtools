@@ -231,8 +231,8 @@ int start() {
     }
 
     // Plot lines
-    double max = iHighest(Symbol(), Period(), MODE_HIGH, WindowFirstVisibleBar());
-    double min = iLowest(Symbol(), Period(), MODE_LOW, WindowFirstVisibleBar());
+    double max = High[iHighest(Symbol(), Period(), MODE_HIGH, WindowFirstVisibleBar())];
+    double min = Low[iLowest(Symbol(), Period(), MODE_LOW, WindowFirstVisibleBar())];
     double spread = (Ask - Bid) / 2.0;
     PlotLine(OBJNAME_LINE_BASE, MathExp(MathLog(x)      - mode[0] * DCThreshold * (EffectiveOSLevel[0] + 1.0)),                    White);
     PlotLine(OBJNAME_LINE_DC,   MathExp(extremaPrice[0] - mode[0] * DCThreshold                              ) + mode[0] * spread, Blue);
@@ -266,11 +266,11 @@ int start() {
     // Change scale
     double chartPriceMin = ChartGetDouble(ChartID(), CHART_FIXED_MIN);
     double chartPriceMax = ChartGetDouble(ChartID(), CHART_FIXED_MAX);
-    double margin = (chartPriceMax - chartPriceMin) * 0.05;
-    if (min < chartPriceMin + margin) {
+    double margin = (max - min) * 0.05;
+    if (min - margin < chartPriceMin) {
       ChartSetDouble(ChartID(), CHART_FIXED_MIN, min - margin);
     }
-    if (max > chartPriceMax - margin) {
+    if (max + margin > chartPriceMax) {
       ChartSetDouble(ChartID(), CHART_FIXED_MAX, max + margin);
     }
   }
