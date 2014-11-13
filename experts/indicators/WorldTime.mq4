@@ -56,10 +56,10 @@ int OnCalculate(const int rates_total,
   timeFrom = StringToTime(TimeToString(timeFrom, TIME_DATE)); // TradeDate
   datetime timeTo = timeFrom + MathCeil((double) (WindowBarsPerChart() * Period()) / 1440) * 86400;
   for (datetime t = timeFrom; t < timeTo; t += 86400) {
-    Plot("AU", t, IsSydneyHoliday(t) , IsSydneySummerTimeSeason(t) , offset, AUOpen, AUClose, AUColor);
-    Plot("JP", t, IsTokyoHoliday(t)  , false                       , offset, JPOpen, JPClose, JPColor);
-    Plot("GB", t, IsTargetHoliday(t) , IsLondonSummerTimeSeason(t) , offset, GBOpen, GBClose, GBColor);
-    Plot("US", t, IsNewyorkHoliday(t), IsNewyorkSummerTimeSeason(t), offset, USOpen, USClose, USColor);
+    Plot(4, "AU", t, IsSydneyHoliday(t) , IsSydneySummerTimeSeason(t) , offset, AUOpen, AUClose, AUColor);
+    Plot(3, "JP", t, IsTokyoHoliday(t)  , false                       , offset, JPOpen, JPClose, JPColor);
+    Plot(2, "GB", t, IsTargetHoliday(t) , IsLondonSummerTimeSeason(t) , offset, GBOpen, GBClose, GBColor);
+    Plot(1, "US", t, IsNewyorkHoliday(t), IsNewyorkSummerTimeSeason(t), offset, USOpen, USClose, USColor);
   }
 
   return(rates_total);
@@ -90,19 +90,9 @@ long DetectServerTimeOffset(const datetime servertime, const datetime gmt) {
   return(result);
 }
 
-void Plot(const string region, const datetime serverTime, const bool isHoliday, const bool isDST, const long offset, long open, long close, const color clr) {
+void Plot(const int pos, const string region, const datetime serverTime, const bool isHoliday, const bool isDST, const long offset, long open, long close, const color clr) {
   string strDate = TimeToString(serverTime, TIME_DATE);
-  if (isHoliday) {
-    Print(region + " " + strDate + " is holiday");
-    return;
-  }
-
   long cid = ChartID();
-
-  string objName = WindowExpertName() + " " + region + " " + strDate;
-  if (ObjectFind(cid, objName) >= 0) {
-    return;
-  }
 
   if (isDST) {
     open--;
@@ -112,8 +102,30 @@ void Plot(const string region, const datetime serverTime, const bool isHoliday, 
   datetime openTime  = baseTime + open  * 3600 + offset;
   datetime closeTime = baseTime + close * 3600 + offset;
 
-  ObjectCreate(cid, objName, OBJ_RECTANGLE, 0, openTime, 0, closeTime, 65535);
-  ObjectSet(objName, OBJPROP_STYLE, STYLE_SOLID);
-  ObjectSet(objName, OBJPROP_COLOR, clr);
-  ObjectSet(objName, OBJPROP_BACK, true);
+  double chartPriceMin = ChartGetDouble(ChartID(), CHART_PRICE_MIN);
+  double chartPriceMax = ChartGetDouble(ChartID(), CHART_PRICE_MAX);
+  double height = (chartPriceMax - chartPriceMin) / 6.0;
+  double y1 = chartPriceMin + height * pos;
+  double y2 = y1 + height;
+  y1 = MathCeil(y1 / Point) * Point;
+  y2 = MathFloor(y2 / Point) * Point;
+  string objName = WindowExpertName() + " " + region + " " + strDate;
+  if (ObjectFind(cid, objName) < 0) {
+    ObjectCreate(cid, objName, OBJ_RECTANGLE, 0, openTime, y1, closeTime, y2);
+    string caption = region + " " + TimeToString(openTime, TIME_MINUTES) + "-" + TimeToString(closeTime, TIME_MINUTES) + (isHoliday ? " (Holiday)" : "");
+    ObjectSetString(cid, objName, OBJPROP_TEXT, caption);
+    ObjectSetInteger(cid, objName, OBJPROP_COLOR, isHoliday ? HalfDownColor(clr) : clr);
+    ObjectSetInteger(cid, objName, OBJPROP_BACK, true);
+  }
+  else {
+    ObjectSetDouble(cid, objName, OBJPROP_PRICE1, y1);
+    ObjectSetDouble(cid, objName, OBJPROP_PRICE2, y2);
+  }
+}
+
+color HalfDownColor(const color clr) {
+  int r = ((clr & 0xff0000) >> 1) & 0xff0000;
+  int g = ((clr & 0x00ff00) >> 1) & 0x00ff00;
+  int b = ((clr & 0x0000ff) >> 1);
+  return(r | g | b);
 }
