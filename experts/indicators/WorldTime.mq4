@@ -54,8 +54,11 @@ int OnCalculate(const int rates_total,
     timeFrom -= 7 * 3600;
   }
   timeFrom = StringToTime(TimeToString(timeFrom, TIME_DATE)); // TradeDate
-  datetime timeTo = timeFrom + MathCeil((double) (WindowBarsPerChart() * Period()) / 1440) * 86400;
+  datetime timeTo = timeFrom + (3 + MathCeil((double) (WindowBarsPerChart() * Period()) / 1440)) * 86400;
   for (datetime t = timeFrom; t < timeTo; t += 86400) {
+    if (TimeDayOfWeek(t) == 0 || TimeDayOfWeek(t) == 6) {
+      continue;
+    }
     Plot(4, "AU", t, IsSydneyHoliday(t) , IsSydneySummerTimeSeason(t) , offset, AUOpen, AUClose, AUColor);
     Plot(3, "JP", t, IsTokyoHoliday(t)  , false                       , offset, JPOpen, JPClose, JPColor);
     Plot(2, "GB", t, IsTargetHoliday(t) , IsLondonSummerTimeSeason(t) , offset, GBOpen, GBClose, GBColor);

@@ -132,7 +132,7 @@ int start() {
           peak = overshootLevel[0];
           drawdown = dd;
         }
-        if (!IsTesting() && !IsOptimization()) {
+        if (!IsTesting() && !IsOptimization() && Time[i] >= Time[0] - 30 * 86400) {
           if (mode[0] == prevMode) {
             // DC is not occured
             if (extremaPrice[0] != prevExtremaPrice) {
@@ -267,12 +267,12 @@ int start() {
     double chartPriceMin = ChartGetDouble(ChartID(), CHART_FIXED_MIN);
     double chartPriceMax = ChartGetDouble(ChartID(), CHART_FIXED_MAX);
     double margin = (max - min) * 0.05;
-    if (min - margin < chartPriceMin) {
+//    if (min - margin < chartPriceMin) {
       ChartSetDouble(ChartID(), CHART_FIXED_MIN, min - margin);
-    }
-    if (max + margin > chartPriceMax) {
+//    }
+//    if (max + margin > chartPriceMax) {
       ChartSetDouble(ChartID(), CHART_FIXED_MAX, max + margin);
-    }
+//    }
   }
 
   return(0);
