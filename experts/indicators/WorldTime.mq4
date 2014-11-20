@@ -87,7 +87,7 @@ long DetectServerTimeOffset(const datetime servertime, const datetime gmt) {
   long result = servertime - gmt;
   result = (long) MathRound(((double) result) / 1800) * 1800;
   if (prevOffset != result) {
-    PrintFormat("ServerTime is GMT%+2.0f", ((double) result) / 3600);
+    PrintFormat("ServerTime is GMT%+3.1f", ((double) result) / 3600);
   }
   prevOffset = result;
   return(result);
@@ -115,15 +115,17 @@ void Plot(const int pos, const string region, const datetime serverTime, const b
   string objName = WindowExpertName() + " " + region + " " + strDate;
   if (ObjectFind(cid, objName) < 0) {
     ObjectCreate(cid, objName, OBJ_RECTANGLE, 0, openTime, y1, closeTime, y2);
-    string caption = region + " " + TimeToString(openTime, TIME_MINUTES) + "-" + TimeToString(closeTime, TIME_MINUTES) + (isHoliday ? " (Holiday)" : "");
-    ObjectSetString(cid, objName, OBJPROP_TEXT, caption);
     ObjectSetInteger(cid, objName, OBJPROP_COLOR, isHoliday ? HalfDownColor(clr) : clr);
     ObjectSetInteger(cid, objName, OBJPROP_BACK, true);
   }
   else {
+    ObjectSetInteger(cid, objName, OBJPROP_TIME1, openTime);
     ObjectSetDouble(cid, objName, OBJPROP_PRICE1, y1);
+    ObjectSetInteger(cid, objName, OBJPROP_TIME2, closeTime);
     ObjectSetDouble(cid, objName, OBJPROP_PRICE2, y2);
   }
+  string caption = region + " " + TimeToString(openTime, TIME_MINUTES) + "-" + TimeToString(closeTime, TIME_MINUTES) + (isHoliday ? " (Holiday)" : "");
+  ObjectSetString(cid, objName, OBJPROP_TEXT, caption);
 }
 
 color HalfDownColor(const color clr) {

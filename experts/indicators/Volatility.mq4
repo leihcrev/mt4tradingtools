@@ -66,14 +66,23 @@
 #property indicator_style8  STYLE_SOLID
 #property indicator_width8  2
 
-input int      Period1 = 5;
-input int      Period2 = 15;
-input int      Period3 = 30;
-input int      Period4 = 60;
-input int      Period5 = 120;
-input int      Period6 = 360;
-input int      Period7 = 720;
-input int      Period8 = 1440;
+input int      MaxBars  = 16384;
+input int      Period1  = 5;
+input int      Period2  = 15;
+input int      Period3  = 30;
+input int      Period4  = 60;
+input int      Period5  = 120;
+input int      Period6  = 360;
+input int      Period7  = 720;
+input int      Period8  = 1440;
+input bool     RV1Label = false;
+input bool     RV2Label = false;
+input bool     RV3Label = false;
+input bool     RV4Label = true;
+input bool     RV5Label = false;
+input bool     RV6Label = false;
+input bool     RV7Label = false;
+input bool     RV8Label = true;
 
 double         RV1Buffer[];
 double         RV2Buffer[];
@@ -130,7 +139,12 @@ int OnCalculate(const int rates_total,
                 const long& volume[],
                 const int& spread[]) {
   int limit = rates_total - prev_calculated;
-  if (prev_calculated != 0) {
+  if (prev_calculated == 0) {
+    if (limit >= MaxBars) {
+      limit = MaxBars - 1;
+    }
+  }
+  else {
     limit++;
   }
 
@@ -209,6 +223,57 @@ int OnCalculate(const int rates_total,
     }
     RV8Buffer[i] = MathSqrt(sumRVar * m8) * 100;
   }
+
+  if (RV1Label) {
+    SetLabel(Period1, RV1Buffer[0]);
+  }
+  if (RV2Label) {
+    SetLabel(Period2, RV2Buffer[0]);
+  }
+  if (RV3Label) {
+    SetLabel(Period3, RV3Buffer[0]);
+  }
+  if (RV4Label) {
+    SetLabel(Period4, RV4Buffer[0]);
+  }
+  if (RV5Label) {
+    SetLabel(Period5, RV5Buffer[0]);
+  }
+  if (RV6Label) {
+    SetLabel(Period6, RV6Buffer[0]);
+  }
+  if (RV7Label) {
+    SetLabel(Period7, RV7Buffer[0]);
+  }
+  if (RV8Label) {
+    SetLabel(Period8, RV8Buffer[0]);
+  }
    
   return(rates_total);
+}
+
+void SetLabel(const int p, const double rv) {
+  string caption = GetTimeWindowCaption(p);
+  string objName = WindowExpertName() + "_" + IntegerToString(p);
+  if (ObjectCreate(ChartID(), objName, OBJ_TEXT, ChartWindowFind(), Time[0], rv)) {
+    ObjectSetInteger(ChartID(), objName, OBJPROP_ANCHOR, ANCHOR_LEFT_UPPER);
+  }
+  else {
+    ObjectMove(ChartID(), objName, 0, Time[0], rv);
+  }
+  ObjectSetText(objName, StringConcatenate(caption, ":", DoubleToString(rv, 2), "%"), 6, "Small Fonts", clrWhite);
+}
+
+string GetTimeWindowCaption(const int p) {
+  if (p % 60 == 0) {
+    int h = p / 60;
+    if (h % 24 == 0) {
+      int d = h / 24;
+      return(StringConcatenate(d, " day", d == 1 ? "" : "s"));
+    }
+    return(StringConcatenate(h, " hour", h == 1 ? "" : "s"));
+  }
+  else {
+    return(StringConcatenate(p, " min", p == 1 ? "" : "s"));
+  }
 }
