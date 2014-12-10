@@ -113,7 +113,16 @@ int OnInit() {
   SetIndexBuffer(6, RV7Buffer);
   SetIndexBuffer(7, RV8Buffer);
   SetIndexBuffer(8, RVarBuffer, INDICATOR_CALCULATIONS);
-  SetIndexLabel(8, "RVar");
+  SetIndexLabel(0, "RV " + GetTimeWindowCaption(Period1 * Period()));
+  SetIndexLabel(1, "RV " + GetTimeWindowCaption(Period2 * Period()));
+  SetIndexLabel(2, "RV " + GetTimeWindowCaption(Period3 * Period()));
+  SetIndexLabel(3, "RV " + GetTimeWindowCaption(Period4 * Period()));
+  SetIndexLabel(4, "RV " + GetTimeWindowCaption(Period5 * Period()));
+  SetIndexLabel(5, "RV " + GetTimeWindowCaption(Period6 * Period()));
+  SetIndexLabel(6, "RV " + GetTimeWindowCaption(Period7 * Period()));
+  SetIndexLabel(7, "RV " + GetTimeWindowCaption(Period8 * Period()));
+  SetIndexLabel(8, "RVar " + GetTimeWindowCaption(Period()));
+  IndicatorDigits(8);
 
   double ybars = 261 * 1440 / Period();
   m1 = ybars / Period1;
@@ -253,8 +262,8 @@ int OnCalculate(const int rates_total,
 }
 
 void SetLabel(const int p, const double rv) {
-  string caption = GetTimeWindowCaption(p);
-  string objName = WindowExpertName() + "_" + IntegerToString(p);
+  string caption = GetTimeWindowCaption(p * Period());
+  string objName = WindowExpertName() + "_" + IntegerToString(p * Period());
   if (ObjectCreate(ChartID(), objName, OBJ_TEXT, ChartWindowFind(), Time[0], rv)) {
     ObjectSetInteger(ChartID(), objName, OBJPROP_ANCHOR, ANCHOR_LEFT_UPPER);
   }
