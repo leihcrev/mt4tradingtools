@@ -54,6 +54,8 @@ double OSLevel[];
 double EffectiveOSLevel[];
 
 int init() {
+  OSAgainstStopLevel = OSAgainstEntryLevel + OSAgainstStopOffset;
+
   SetIndexLabel(0, "Up OS");
   SetIndexBuffer(0, OSLevelU);
   SetIndexStyle(0, DRAW_HISTOGRAM);
@@ -73,8 +75,6 @@ int init() {
   SetLevelValue(0, OSAgainstEntryLevel);
   SetLevelValue(1, OSAgainstStopLevel);
   SetLevelValue(2, -1.0);
-
-  OSAgainstStopLevel = OSAgainstEntryLevel + OSAgainstStopOffset;
 
   ChartSetInteger(ChartID(), CHART_SCALEFIX, true);
 
@@ -267,12 +267,8 @@ int start() {
     double chartPriceMin = ChartGetDouble(ChartID(), CHART_FIXED_MIN);
     double chartPriceMax = ChartGetDouble(ChartID(), CHART_FIXED_MAX);
     double margin = (max - min) * 0.05;
-//    if (min - margin < chartPriceMin) {
-      ChartSetDouble(ChartID(), CHART_FIXED_MIN, min - margin);
-//    }
-//    if (max + margin > chartPriceMax) {
-      ChartSetDouble(ChartID(), CHART_FIXED_MAX, max + margin);
-//    }
+    ChartSetDouble(ChartID(), CHART_FIXED_MIN, min - margin);
+    ChartSetDouble(ChartID(), CHART_FIXED_MAX, max + margin);
   }
 
   return(0);
