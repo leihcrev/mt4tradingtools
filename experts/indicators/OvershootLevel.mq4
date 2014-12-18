@@ -279,6 +279,7 @@ void PlotLine(const string objname, const double price, const color clr) {
     ObjectCreate(objname, OBJ_HLINE, 0, 0, price);
     ObjectSet(objname, OBJPROP_COLOR, clr);
     ObjectSetString(ChartID(), objname, OBJPROP_TEXT, objname);
+    ObjectSetInteger(ChartID(), objname, OBJPROP_BACK, true);
   }
   else {
     ObjectSet(objname, OBJPROP_PRICE1, price);
