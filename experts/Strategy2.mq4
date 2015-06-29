@@ -5,19 +5,19 @@
 
 // Input parameters
 // -- Signal
-input int    MA_Period       = 112;   // Signal - MA period
-input int    MA_Slippage     = 32;    // Signal - MA slippage
+input int    MA_Period       = 136;   // Signal - MA period
+input int    MA_Slippage     = 24;    // Signal - MA slippage
 input int    WPR_Period      = 16;    // Signal - WPR period
 input int    WPR_OpenLevel   = 5;     // Signal - WPR open level
 input int    WPR_CloseLevel  = 80;    // Signal - WPR close level
-input int    ATR_Period      = 12;    // Signal - ATR period
+input int    ATR_Period      = 40;    // Signal - ATR period
 input int    ATR_StopLevel   = 4;     // Signal - ATR stop level
-input int    CCI_Period      = 34;    // Signal - CCI period
-input int    CCI_Level       = 90;    // Signal - CCI level
-input int    CloseOnlyProfit = 4;     // Signal - Close only profit
+input int    CCI_Period      = 20;    // Signal - CCI period
+input int    CCI_Level       = 100;   // Signal - CCI level
+input int    CloseOnlyProfit = 8;     // Signal - Close only profit
 // -- Order management
-input double StopLoss        = 40;    // Order management - Stop loss
-input double TakeProfit      = 16;    // Order management - Take profit
+input double StopLoss        = 35;    // Order management - Stop loss
+input double TakeProfit      = 25;    // Order management - Take profit
 input int    TrailingStop    = 5;     // Order management - Trailing stop
 input int    TrailingStep    = 0;     // Order management - Trailing step
 input int    WaitSeconds     = 960;   // Order management - Wait seconds since order sent
@@ -204,7 +204,7 @@ double OnTester() {
   ArrayResize(hpr, n);
 
   // Calculate HPR
-  double min = 99999999, max = -99999999;
+  double lossRatio = 0;
   for (int i = 0; i < n; i++) {
     if (!OrderSelect(i, SELECT_BY_POS, MODE_HISTORY)) {
       continue;
@@ -214,19 +214,16 @@ double OnTester() {
       r = -r;
     }
     hpr[i] = r / (OrderOpenPrice() * StopLoss * Pips);
-    if (hpr[i] < min) {
-      min = hpr[i];
-    }
-    if (hpr[i] > max) {
-      max = hpr[i];
+    double loss = StopLoss * Pips / OrderOpenPrice();
+    if (loss > lossRatio) {
+      lossRatio = loss;
     }
   }
-  Print("hpr range=(", min, ", ", max, ")");
 
   // Calculate sup of OptimalF
-  double supF = 1.0;
+  double supF = 25.0 * lossRatio;
 
-  return(OptimizeTWR(n, hpr, supF));
+  return(MathLog(OptimizeTWR(n, hpr, supF)));
 }
 
 double OptimizeTWR(int n, double &hpr[], double supF) {
