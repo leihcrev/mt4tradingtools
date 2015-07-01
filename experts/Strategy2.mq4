@@ -5,19 +5,19 @@
 
 // Input parameters
 // -- Signal
-input int    MA_Period       = 136;   // Signal - MA period
-input int    MA_Slippage     = 24;    // Signal - MA slippage
-input int    WPR_Period      = 16;    // Signal - WPR period
+input int    MA_Period       = 156;   // Signal - MA period
+input int    MA_Slippage     = 28;    // Signal - MA slippage
+input int    WPR_Period      = 8;     // Signal - WPR period
 input int    WPR_OpenLevel   = 5;     // Signal - WPR open level
-input int    WPR_CloseLevel  = 80;    // Signal - WPR close level
-input int    ATR_Period      = 40;    // Signal - ATR period
-input int    ATR_StopLevel   = 4;     // Signal - ATR stop level
-input int    CCI_Period      = 20;    // Signal - CCI period
-input int    CCI_Level       = 100;   // Signal - CCI level
-input int    CloseOnlyProfit = 8;     // Signal - Close only profit
+input int    WPR_CloseLevel  = 60;    // Signal - WPR close level
+input int    ATR_Period      = 28;    // Signal - ATR period
+input int    ATR_StopLevel   = 2;     // Signal - ATR stop level
+input int    CCI_Period      = 12;    // Signal - CCI period
+input int    CCI_Level       = 95;    // Signal - CCI level
+input int    CloseOnlyProfit = 2;     // Signal - Close only profit
 // -- Order management
-input double StopLoss        = 35;    // Order management - Stop loss
-input double TakeProfit      = 25;    // Order management - Take profit
+input double StopLoss        = 27;    // Order management - Stop loss
+input double TakeProfit      = 45;    // Order management - Take profit
 input int    TrailingStop    = 5;     // Order management - Trailing stop
 input int    TrailingStep    = 0;     // Order management - Trailing step
 input int    WaitSeconds     = 960;   // Order management - Wait seconds since order sent
@@ -169,8 +169,8 @@ void OnInit() {
 
   WPR_OpenLevel_Buy   =  WPR_OpenLevel  - 100;
   WPR_OpenLevel_Sell  = -WPR_OpenLevel;
-  WPR_CloseLevel_Buy  = -WPR_CloseLevel;
-  WPR_CloseLevel_Sell =  WPR_CloseLevel - 100;
+  WPR_CloseLevel_Buy  =  WPR_CloseLevel - 100;
+  WPR_CloseLevel_Sell = -WPR_CloseLevel;
   CCI_Level_Buy       = -CCI_Level;
   CCI_Level_Sell      =  CCI_Level;
 }
