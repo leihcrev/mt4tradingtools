@@ -5,8 +5,8 @@
 
 // Input parameters
 // -- Signal
-input int    MA_Period       = 156;   // Signal - MA period
-input int    MA_Slippage     = 28;    // Signal - MA slippage
+input int    MA_Period       = 158;   // Signal - MA period
+input int    MA_Slippage     = 30;    // Signal - MA slippage
 input int    WPR_Period      = 8;     // Signal - WPR period
 input int    WPR_OpenLevel   = 5;     // Signal - WPR open level
 input int    WPR_CloseLevel  = 60;    // Signal - WPR close level
@@ -14,10 +14,10 @@ input int    ATR_Period      = 28;    // Signal - ATR period
 input int    ATR_StopLevel   = 2;     // Signal - ATR stop level
 input int    CCI_Period      = 12;    // Signal - CCI period
 input int    CCI_Level       = 95;    // Signal - CCI level
-input int    CloseOnlyProfit = 2;     // Signal - Close only profit
+input int    CloseOnlyProfit = 4;     // Signal - Close only profit
 // -- Order management
 input double StopLoss        = 27;    // Order management - Stop loss
-input double TakeProfit      = 45;    // Order management - Take profit
+input double TakeProfit      = 50;    // Order management - Take profit
 input int    TrailingStop    = 5;     // Order management - Trailing stop
 input int    TrailingStep    = 0;     // Order management - Trailing step
 input int    WaitSeconds     = 960;   // Order management - Wait seconds since order sent
