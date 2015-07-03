@@ -6,22 +6,22 @@
 // Input parameters
 // -- Signal
 input int    MA_Period       = 158;   // Signal - MA period
-input int    MA_Slippage     = 30;    // Signal - MA slippage
+input double MA_Slippage     = 30.0;  // Signal - MA slippage
 input int    WPR_Period      = 8;     // Signal - WPR period
-input int    WPR_OpenLevel   = 5;     // Signal - WPR open level
-input int    WPR_CloseLevel  = 60;    // Signal - WPR close level
+input double WPR_OpenLevel   = 5.0;   // Signal - WPR open level
+input double WPR_CloseLevel  = 60.0;  // Signal - WPR close level
 input int    ATR_Period      = 28;    // Signal - ATR period
-input int    ATR_StopLevel   = 2;     // Signal - ATR stop level
+input double ATR_StopLevel   = 2.0;   // Signal - ATR stop level
 input int    CCI_Period      = 12;    // Signal - CCI period
-input int    CCI_Level       = 95;    // Signal - CCI level
-input int    CloseOnlyProfit = 4;     // Signal - Close only profit
+input double CCI_Level       = 95.0;  // Signal - CCI level
+input double CloseOnlyProfit = 4.6;   // Signal - Close only profit
 // -- Order management
 input double StopLoss        = 27;    // Order management - Stop loss
 input double TakeProfit      = 50;    // Order management - Take profit
-input int    TrailingStop    = 5;     // Order management - Trailing stop
-input int    TrailingStep    = 0;     // Order management - Trailing step
+input double TrailingStop    = 5.0;   // Order management - Trailing stop
+input double TrailingStep    = 0.0;   // Order management - Trailing step
 input int    WaitSeconds     = 960;   // Order management - Wait seconds since order sent
-input int    SlippagePoints  = 3;     // Order management - Slippage points
+input double SlippagePoints  = 3.0;   // Order management - Slippage points
 input double MaxSpread       = 2.0;   // Order management - Max spread
 input double Lots            = 1.00;  // Order management - Lots
 input double PercentageMM    = 10.0;  // Order management - Money usage(%)
@@ -30,12 +30,12 @@ input int    MagicNumber     = 2;     // Order management - Magic number
 // Module variables
 int    Slippage = 3;
 double Pips;
-int    WPR_OpenLevel_Buy;
-int    WPR_OpenLevel_Sell;
-int    WPR_CloseLevel_Buy;
-int    WPR_CloseLevel_Sell;
-int    CCI_Level_Buy;
-int    CCI_Level_Sell;
+double WPR_OpenLevel_Buy;
+double WPR_OpenLevel_Sell;
+double WPR_CloseLevel_Buy;
+double WPR_CloseLevel_Sell;
+double CCI_Level_Buy;
+double CCI_Level_Sell;
 
 void OnTick() {
   SetStopLossTakeProfit(StopLoss, TakeProfit);
@@ -155,10 +155,10 @@ void SetStopLossTakeProfit(const double sl, const double tp){
 
 void OnInit() {
   if (Digits == 3 || Digits == 5) {
-    Slippage = SlippagePoints * 10;
+    Slippage = (int) SlippagePoints * 10;
   }
   else {
-    Slippage = SlippagePoints;
+    Slippage = (int) SlippagePoints;
   }
   if (Digits < 4) {
     Pips = 0.01;
