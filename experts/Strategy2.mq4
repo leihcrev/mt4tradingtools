@@ -3,6 +3,8 @@
 #include <stdlib.mqh>
 #include <stderror.mqh> 
 
+#include <Position.mqh>
+
 // Input parameters
 // -- Signal
 input int    MA_Period       = 158;   // Signal - MA period
@@ -29,6 +31,7 @@ input int    MagicNumber     = 2;     // Order management - Magic number
 
 // Module variables
 int    Slippage = 3;
+int    StopLossPips;
 double Pips;
 double WPR_OpenLevel_Buy;
 double WPR_OpenLevel_Sell;
@@ -92,13 +95,13 @@ void OnTick() {
 	datetime now = TimeCurrent();
 	if (ordersTotal == 0 && now >= timeOrderSent + WaitSeconds && Ask - Bid <= MaxSpread * Pips) {
   	if (signal == 1) {
-	    if (OrderSend(Symbol(), OP_BUY, GetLots(), Ask, Slippage, 0, 0, "Strategy2", MagicNumber, 0) < 0) {
+	    if (OrderSend(Symbol(), OP_BUY, Lots == 0.0 ? GetOptimalLots(Symbol(), PercentageMM / 100.0, StopLossPips) : Lots, Ask, Slippage, 0, 0, "Strategy2", MagicNumber, 0) < 0) {
       	Print("OrderSend failed with error: ", ErrorDescription(GetLastError()));
 	    }
     	timeOrderSent = now;
 	  }
   	else if (signal == -1) {
-	    if (OrderSend(Symbol(), OP_SELL, GetLots(), Bid, Slippage, 0, 0, "Strategy2", MagicNumber, 0) < 0) {
+	    if (OrderSend(Symbol(), OP_SELL, Lots == 0.0 ? GetOptimalLots(Symbol(), PercentageMM / 100.0, StopLossPips) : Lots, Bid, Slippage, 0, 0, "Strategy2", MagicNumber, 0) < 0) {
       	Print("OrderSend failed with error: ", ErrorDescription(GetLastError()));
 	    }
 	    timeOrderSent = now;
@@ -156,9 +159,11 @@ void SetStopLossTakeProfit(const double sl, const double tp){
 void OnInit() {
   if (Digits == 3 || Digits == 5) {
     Slippage = (int) SlippagePoints * 10;
+    StopLossPips = (int) StopLoss * 10;
   }
   else {
     Slippage = (int) SlippagePoints;
+    StopLossPips = (int) StopLoss;
   }
   if (Digits < 4) {
     Pips = 0.01;
@@ -176,26 +181,6 @@ void OnInit() {
 }
  
 void OnDeinit(const int reason) {
-}
-
-double GetLots() { 
-  if (Lots == 0.0) {
-    double a = (PercentageMM * AccountFreeMargin() / MarketInfo(Symbol(), MODE_LOTSIZE));
-    double lotStep = MarketInfo(Symbol(), MODE_LOTSTEP);
-    a =  MathFloor(a / lotStep) * lotStep;
-    double maxLot = MarketInfo(Symbol(), MODE_MAXLOT);
-    if (a > maxLot) {
-      return(maxLot);
-    }
-    else {
-      double minLot = MarketInfo(Symbol(), MODE_MINLOT);   
-      if (a < minLot) {
-        return(minLot);
-      }
-    }
-    return(a);
-  }    
-  return(Lots);
 }
 
 double OnTester() {
