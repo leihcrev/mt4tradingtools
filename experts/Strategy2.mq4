@@ -7,26 +7,26 @@
 
 // Input parameters
 // -- Signal
-input int    MA_Period       = 158;   // Signal - MA period
+input int    MA_Period       = 159;   // Signal - MA period
 input double MA_Slippage     = 30.0;  // Signal - MA slippage
 input int    WPR_Period      = 8;     // Signal - WPR period
 input double WPR_OpenLevel   = 5.0;   // Signal - WPR open level
 input double WPR_CloseLevel  = 60.0;  // Signal - WPR close level
 input int    ATR_Period      = 28;    // Signal - ATR period
 input double ATR_StopLevel   = 2.0;   // Signal - ATR stop level
-input int    CCI_Period      = 12;    // Signal - CCI period
+input int    CCI_Period      = 13;    // Signal - CCI period
 input double CCI_Level       = 95.0;  // Signal - CCI level
-input double CloseOnlyProfit = 4.6;   // Signal - Close only profit
+input double CloseOnlyProfit = 4.7;   // Signal - Close only profit
 // -- Order management
 input double StopLoss        = 27;    // Order management - Stop loss
-input double TakeProfit      = 50;    // Order management - Take profit
-input double TrailingStop    = 5.0;   // Order management - Trailing stop
-input double TrailingStep    = 0.0;   // Order management - Trailing step
+input double TakeProfit      = 51;    // Order management - Take profit
+input double TrailDistance   = 12.0;  // Order management - Trail distance
+input double TrailingStart   = 0.0;   // Order management - Trailing start
 input int    WaitSeconds     = 960;   // Order management - Wait seconds since order sent
 input double SlippagePoints  = 3.0;   // Order management - Slippage points
 input double MaxSpread       = 2.0;   // Order management - Max spread
-input double Lots            = 1.00;  // Order management - Lots
-input double PercentageMM    = 10.0;  // Order management - Money usage(%)
+input double Lots            = 0.00;  // Order management - Lots
+input double PercentageMM    = 100.0; // Order management - Money usage(%)
 input int    MagicNumber     = 2;     // Order management - Magic number
 
 // Module variables
@@ -127,8 +127,8 @@ void SetStopLossTakeProfit(const double sl, const double tp){
       if (tpPrice == 0) {
         tpPrice = NormalizeDouble(Ask + tp * Pips, Digits);
       }
-      if (TrailingStop > 0 && NormalizeDouble(Ask - TrailingStep * Pips, Digits) > NormalizeDouble(OrderOpenPrice() + TrailingStop * Pips, Digits)) {
-        tmp = NormalizeDouble(Bid - TrailingStop * Pips, Digits);
+      if (TrailDistance > 0 && NormalizeDouble(Bid - TrailingStart * Pips, Digits) > NormalizeDouble(OrderOpenPrice() + TrailDistance * Pips, Digits)) {
+        tmp = NormalizeDouble(Bid - TrailDistance * Pips, Digits);
         if (NormalizeDouble(OrderStopLoss(), Digits) < tmp || slPrice == 0) {
           slPrice = tmp;
         }
@@ -141,8 +141,8 @@ void SetStopLossTakeProfit(const double sl, const double tp){
       if (tpPrice == 0) {
         tpPrice = NormalizeDouble(Bid - tp * Pips, Digits);
       }
-      if (TrailingStop > 0 && NormalizeDouble(Bid + TrailingStep * Pips, Digits) < NormalizeDouble(OrderOpenPrice() - TrailingStop * Pips, Digits)) {
-        tmp = NormalizeDouble(Ask + TrailingStop * Pips, Digits);
+      if (TrailDistance > 0 && NormalizeDouble(Ask + TrailingStart * Pips, Digits) < NormalizeDouble(OrderOpenPrice() - TrailDistance * Pips, Digits)) {
+        tmp = NormalizeDouble(Ask + TrailDistance * Pips, Digits);
         if (NormalizeDouble(OrderStopLoss(), Digits) > tmp || slPrice == 0) {
           slPrice = tmp;
         }
