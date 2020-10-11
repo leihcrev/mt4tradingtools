@@ -2,6 +2,8 @@
 * text=auto
 * text eol=crlf
 
+*.dat binary
+
 # Custom for Visual Studio
 *.cs     diff=csharp
 *.sln    merge=union
