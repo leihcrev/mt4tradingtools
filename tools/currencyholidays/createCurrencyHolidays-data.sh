@@ -21,10 +21,11 @@ for ccy in `cat currencies.txt`; do
 						"NOV") echo 11 ;;
 						"DEC") echo 12 ;;
 					esac`
+					nm=`echo "$nm" |sed -e 's/"//g'`
 					echo "{D'$yy.$mm.$dd',\"$nm\"},"
 				fi
 			done <$filename
 		fi
 	done
-	echo "}"
+	echo "},"
 done

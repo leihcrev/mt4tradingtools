@@ -462,7 +462,7 @@
 {D'2030.12.01',"Commemoration Day"},
 {D'2030.12.02',"UAE National Day"},
 {D'2030.12.03',"UAE National Day"},
-}
+},
 "AFN", {
 {D'2019.04.28',"Victory Day"},
 {D'2019.05.01',"International Workers' Day"},
@@ -650,7 +650,7 @@
 {D'2030.05.13',"Ashura [Estimated]"},
 {D'2030.07.13',"Mawlid An Nabi [Estimated]"},
 {D'2030.08.19',"Independence Day"},
-}
+},
 "ALL", {
 {D'2011.08.30',"Eid Al Fitr [Estimated]"},
 {D'2011.10.19',"Mother Teresa Day"},
@@ -923,7 +923,7 @@
 {D'2030.11.29',"Liberation Day"},
 {D'2030.12.09',"Mon after National Youth Day"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "AMD", {
 {D'2018.09.21',"Independence Day"},
 {D'2018.12.31',"New Year's Eve"},
@@ -1119,7 +1119,7 @@
 {D'2030.07.05',"Constitution Day"},
 {D'2030.09.21',"Independence Day"},
 {D'2030.12.31',"New Year's Eve"},
-}
+},
 "ANG", {
 {D'2007.04.06',"Good Friday"},
 {D'2007.04.09',"Easter Monday"},
@@ -1173,7 +1173,7 @@
 {D'2011.05.01',"Labour Day"},
 {D'2011.06.02',"Ascension"},
 {D'2011.07.02',"Curacao Flag Day"},
-}
+},
 "AOA", {
 {D'2011.09.17',"National Heroes' Day"},
 {D'2011.11.02',"All Souls' Day"},
@@ -1422,7 +1422,7 @@
 {D'2030.11.02',"All Souls' Day"},
 {D'2030.11.11',"Independence Day"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "ARB", {
 {D'2015.07.09',"Independence Day"},
 {D'2015.07.10',"Independence Day [Bridge]"},
@@ -1452,7 +1452,7 @@
 {D'2017.01.01',"New Year"},
 {D'2017.02.27',"Carnival"},
 {D'2017.02.28',"Carnival"},
-}
+},
 "ARS", {
 {D'1996.01.01',"New Year"},
 {D'1996.04.04',"Maundy Thursday"},
@@ -2016,7 +2016,7 @@
 {D'2030.11.18',"Mon before National Sovereignty Day"},
 {D'2030.12.08',"Immaculate Conception"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "ATS", {
 {D'2008.12.25',"Christmas"},
 {D'2008.12.26',"Christmas"},
@@ -2042,7 +2042,7 @@
 {D'2012.04.06',"Good Friday"},
 {D'2012.04.09',"Easter Monday"},
 {D'2012.05.01',"Labour Day"},
-}
+},
 "AUD", {
 {D'1996.01.01',"New Year"},
 {D'1996.01.26',"Australia Day"},
@@ -2404,7 +2404,7 @@
 {D'2030.10.07',"New South Wales Labour Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Boxing Day"},
-}
+},
 "AZN", {
 {D'2018.11.09',"State Flag Day"},
 {D'2018.12.31',"Solidarity Day"},
@@ -2637,7 +2637,7 @@
 {D'2030.06.26',"Armed Forces Day"},
 {D'2030.11.11',"Mon after State Flag Day"},
 {D'2030.12.31',"Solidarity Day"},
-}
+},
 "BAM", {
 {D'2011.08.30',"Ramadan Bayram"},
 {D'2011.11.07',"Mon after Kurban Bayram"},
@@ -2833,7 +2833,7 @@
 {D'2030.05.02',"Labour Day"},
 {D'2030.11.25',"National Statehood Day"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "BBD", {
 {D'2007.04.06',"Good Friday"},
 {D'2007.04.09',"Easter Monday"},
@@ -3121,7 +3121,7 @@
 {D'2030.11.30',"Independence Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "BDT", {
 {D'2007.04.14',"Bengali New Year"},
 {D'2007.05.01',"May Day"},
@@ -3668,7 +3668,7 @@
 {D'2030.12.16',"Victory Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.31',"December Holiday"},
-}
+},
 "BEF", {
 {D'2008.12.25',"Christmas"},
 {D'2008.12.26',"Christmas"},
@@ -3694,7 +3694,7 @@
 {D'2012.04.06',"Good Friday"},
 {D'2012.04.09',"Easter Monday"},
 {D'2012.05.01',"Labour Day"},
-}
+},
 "BGL", {
 {D'1996.01.01',"New Year"},
 {D'1996.03.03',"National Day"},
@@ -3722,7 +3722,7 @@
 {D'1999.05.01',"Labour Day"},
 {D'1999.05.24',"Day of Bulgarian Culture"},
 {D'1999.09.06',"National Unification Day"},
-}
+},
 "BGN", {
 {D'1999.12.25',"Christmas"},
 {D'1999.12.26',"Christmas"},
@@ -4102,7 +4102,7 @@
 {D'2030.12.24',"Christmas Eve"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "BHD", {
 {D'1996.01.01',"New Year"},
 {D'1996.02.20',"Eid Al Fitr"},
@@ -4592,7 +4592,7 @@
 {D'2030.07.13',"Mawlid An Nabi [Estimated]"},
 {D'2030.12.16',"National Day"},
 {D'2030.12.17',"National Day"},
-}
+},
 "BIF", {
 {D'2011.08.15',"Assumption"},
 {D'2011.08.30',"Eid Al Fitr [Estimated]"},
@@ -4848,7 +4848,7 @@
 {D'2030.10.21',"Ndadaye Day"},
 {D'2030.11.01',"All Saints' Day"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "BMD", {
 {D'2007.04.06',"Good Friday"},
 {D'2007.05.01',"Labour Day"},
@@ -5090,7 +5090,7 @@
 {D'2030.11.11',"Remembrance Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "BND", {
 {D'2007.05.31',"Armed Forces Day"},
 {D'2007.07.16',"Mon after The Sultan's Birthday"},
@@ -5466,7 +5466,7 @@
 {D'2030.11.23',"Lailat Al Miraj [Estimated]"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.31',"New Year's Eve Bank Hol"},
-}
+},
 "BRL", {
 {D'1996.01.01',"New Year"},
 {D'1996.02.19',"Carnival"},
@@ -5896,7 +5896,7 @@
 {D'2030.11.02',"All Souls' Day"},
 {D'2030.11.15',"Republic Day"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "BSD", {
 {D'2007.04.06',"Good Friday"},
 {D'2007.04.09',"Easter Monday"},
@@ -6153,7 +6153,7 @@
 {D'2030.10.14',"National Heroes' Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "BWD", {
 {D'2008.03.21',"Good Friday"},
 {D'2008.03.24',"Easter Monday"},
@@ -6174,7 +6174,7 @@
 {D'2009.07.01',"Sir Seretse Khama Day"},
 {D'2009.07.20',"President's Day"},
 {D'2009.07.21',"President's Day"},
-}
+},
 "BWP", {
 {D'2009.09.30',"Botswana Day"},
 {D'2009.10.01',"Botswana Day"},
@@ -6457,7 +6457,7 @@
 {D'2030.10.01',"Botswana Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "BYN", {
 {D'2016.11.07',"Revolution Day"},
 {D'2016.12.25',"Christmas"},
@@ -6641,7 +6641,7 @@
 {D'2030.11.07',"Revolution Day"},
 {D'2030.11.08',"Revolution Day [Bridge]"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "BYR", {
 {D'2011.03.08',"Womens Day"},
 {D'2011.04.24',"Orthodox Easter"},
@@ -6706,7 +6706,7 @@
 {D'2016.05.09',"Victory Day"},
 {D'2016.05.10',"Radunitsa"},
 {D'2016.07.03',"Independence Day"},
-}
+},
 "BZD", {
 {D'2008.03.10',"Baron Bliss Day"},
 {D'2008.03.21',"Good Friday"},
@@ -6985,7 +6985,7 @@
 {D'2030.11.19',"Garifuna Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "CAD", {
 {D'1996.01.01',"New Year"},
 {D'1996.04.05',"Good Friday"},
@@ -7368,7 +7368,7 @@
 {D'2030.11.11',"Remembrance Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Boxing Day"},
-}
+},
 "CHF", {
 {D'1996.01.01',"New Year"},
 {D'1996.01.02',"Berchtelistag"},
@@ -7718,7 +7718,7 @@
 {D'2030.08.01',"Swiss National Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "CLP", {
 {D'1996.01.01',"New Year"},
 {D'1996.04.05',"Good Friday"},
@@ -8249,7 +8249,7 @@
 {D'2030.12.08',"Immaculate Conception"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.31',"New Year's Eve"},
-}
+},
 "CNH", {
 {D'2011.09.05',"Labor Day"},
 {D'2011.09.12',"Mid Autumn Festival"},
@@ -8817,7 +8817,7 @@
 {D'2030.10.07',"National Holiday"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "CNY", {
 {D'1996.01.01',"New Year"},
 {D'1996.02.19',"Chinese New Year"},
@@ -9469,7 +9469,7 @@
 {D'2030.10.05',"National Holiday"},
 {D'2030.10.06',"National Holiday"},
 {D'2030.10.07',"National Holiday"},
-}
+},
 "COP", {
 {D'1996.01.01',"New Year"},
 {D'1996.01.08',"Mon after Epiphany"},
@@ -10094,7 +10094,7 @@
 {D'2030.11.11',"Ind. of Cartagena City"},
 {D'2030.12.08',"Immaculate Conception"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "CRC", {
 {D'2012.07.25',"Annexation of Guanacaste"},
 {D'2012.08.02',"Our Lady of Los Angeles"},
@@ -10312,7 +10312,7 @@
 {D'2030.12.01',"Army Abolition Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.31',"Central Bank Holiday"},
-}
+},
 "CYP", {
 {D'2006.08.15',"Assumption"},
 {D'2006.10.01',"Cyprus Independence Day"},
@@ -10336,7 +10336,7 @@
 {D'2007.12.26',"Christmas"},
 {D'2008.01.01',"New Year"},
 {D'2008.01.06',"Epiphany"},
-}
+},
 "CZK", {
 {D'1997.05.01',"May Day"},
 {D'1997.05.08',"Liberation Day"},
@@ -10754,7 +10754,7 @@
 {D'2030.12.24',"Christmas Eve"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "DEM", {
 {D'2008.12.25',"Christmas"},
 {D'2008.12.26',"Christmas"},
@@ -10780,7 +10780,7 @@
 {D'2012.04.06',"Good Friday"},
 {D'2012.04.09',"Easter Monday"},
 {D'2012.05.01',"Labour Day"},
-}
+},
 "DKK", {
 {D'1996.01.01',"New Year"},
 {D'1996.04.04',"Maundy Thursday"},
@@ -11215,7 +11215,7 @@
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Boxing Day"},
 {D'2030.12.31',"New Year's Eve"},
-}
+},
 "DZD", {
 {D'2008.06.19',"Commemoration Day"},
 {D'2008.07.05',"Independence Day"},
@@ -11478,7 +11478,7 @@
 {D'2030.07.05',"Independence Day"},
 {D'2030.07.13',"Mawlid An Nabi [Estimated]"},
 {D'2030.11.01',"Revolution Day"},
-}
+},
 "ECS", {
 {D'1996.01.01',"New Year"},
 {D'1996.04.05',"Good Friday"},
@@ -11672,7 +11672,7 @@
 {D'2012.04.06',"Good Friday"},
 {D'2012.05.01',"May Day"},
 {D'2012.05.25',"Battle of Pichincha"},
-}
+},
 "EEK", {
 {D'2004.04.09',"Good Friday"},
 {D'2004.05.01',"Labour Day"},
@@ -11742,7 +11742,7 @@
 {D'2011.05.01',"Labour Day"},
 {D'2011.06.23',"Mid-Summer Eve"},
 {D'2011.06.24',"Mid-Summer Day"},
-}
+},
 "EGP", {
 {D'1996.02.21',"Biram Feast [Estimated]"},
 {D'1996.02.22',"Biram Feast [Estimated]"},
@@ -12354,7 +12354,7 @@
 {D'2030.07.13',"Mawled el Nabi [Estimated]"},
 {D'2030.07.23',"Revolution Day"},
 {D'2030.10.06',"Armed Forces Day"},
-}
+},
 "ESP", {
 {D'2008.12.25',"Christmas"},
 {D'2008.12.26',"Christmas"},
@@ -12380,7 +12380,7 @@
 {D'2012.04.06',"Good Friday"},
 {D'2012.04.09',"Easter Monday"},
 {D'2012.05.01',"Labour Day"},
-}
+},
 "ETB", {
 {D'2004.11.14',"Eid al Fitr estimated"},
 {D'2005.01.07',"Ethiopian Christmas"},
@@ -12689,7 +12689,7 @@
 {D'2030.07.14',"Mawlid An Nabi [Estimated]"},
 {D'2030.09.11',"Ethiopian New Year"},
 {D'2030.09.27',"Finding of True Cross"},
-}
+},
 "EUR", {
 {D'1998.12.25',"Christmas"},
 {D'1999.01.01',"New Year"},
@@ -12882,7 +12882,7 @@
 {D'2030.05.01',"Labour Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "FIM", {
 {D'2008.12.25',"Christmas"},
 {D'2008.12.26',"Christmas"},
@@ -12926,7 +12926,7 @@
 {D'2015.04.03',"Good Friday"},
 {D'2015.04.06',"Easter Monday"},
 {D'2015.05.01',"Labour Day"},
-}
+},
 "FJD", {
 {D'2006.10.09',"Fiji Day"},
 {D'2006.12.25',"Christmas"},
@@ -13154,7 +13154,7 @@
 {D'2030.10.28',"Mon after Diwali [Estimated]"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "FRF", {
 {D'2008.12.25',"Christmas"},
 {D'2008.12.26',"Christmas"},
@@ -13213,7 +13213,7 @@
 {D'2017.12.25',"Christmas"},
 {D'2017.12.26',"Christmas"},
 {D'2018.01.01',"New Year"},
-}
+},
 "GBP", {
 {D'1996.01.01',"New Year"},
 {D'1996.04.05',"Good Friday"},
@@ -13499,7 +13499,7 @@
 {D'2030.08.26',"August Bank Holiday"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Boxing Day"},
-}
+},
 "GEL", {
 {D'2016.03.03',"Mother's Day"},
 {D'2016.03.08',"International Womens Day"},
@@ -13718,7 +13718,7 @@
 {D'2030.08.28',"Saint Mary's Day"},
 {D'2030.10.14',"Svetitskhoveli Cathedral"},
 {D'2030.11.23',"Saint George's Day"},
-}
+},
 "GHC", {
 {D'2007.04.06',"Good Friday"},
 {D'2007.04.09',"Easter Monday"},
@@ -13761,7 +13761,7 @@
 {D'2010.03.08',"Independence Day"},
 {D'2010.04.02',"Good Friday"},
 {D'2010.04.05',"Easter Monday"},
-}
+},
 "GHS", {
 {D'2010.05.01',"Labour Day"},
 {D'2010.05.25',"Africa Day"},
@@ -14031,7 +14031,7 @@
 {D'2030.12.06',"Farmers' Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "GNF", {
 {D'2018.10.02',"Independence Day"},
 {D'2018.11.01',"All Saints' Day"},
@@ -14193,7 +14193,7 @@
 {D'2030.10.02',"Independence Day"},
 {D'2030.11.01',"All Saints' Day"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "GYD", {
 {D'2007.04.06',"Good Friday"},
 {D'2007.04.09',"Easter Monday"},
@@ -14549,7 +14549,7 @@
 {D'2030.10.26',"Deepavali [Estimated]"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "HKD", {
 {D'1996.01.01',"New Year"},
 {D'1996.02.19',"Lunar New Year"},
@@ -14574,7 +14574,7 @@
 {D'1997.04.05',"Ching Ming"},
 {D'1997.06.09',"Tueng Ng [Est]"},
 {D'1997.06.30',"Monday following Queen's Birthday"},
-{D'1997.07.01',""HK Return to China,SAR Establishment Day""},
+{D'1997.07.01',"HK Return to China,SAR Establishment Day"},
 {D'1997.07.02',"The day following SAR Establishement Day"},
 {D'1997.08.18',"Sino-Japanese War Victory Day"},
 {D'1997.09.17',"Chinese MId Autumn Festival"},
@@ -15113,7 +15113,7 @@
 {D'2030.10.05',"Chung Yeung"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "HRK", {
 {D'2007.04.09',"Easter Monday"},
 {D'2007.05.01',"Labour Day"},
@@ -15424,7 +15424,7 @@
 {D'2030.11.18',"Remembrance Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "HUF", {
 {D'1996.01.01',"New Year"},
 {D'1996.03.15',"Ann. of 1848 Revolution"},
@@ -15872,7 +15872,7 @@
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
 {D'2030.12.27',"Christmas [Bridge]"},
-}
+},
 "IDR", {
 {D'1996.01.01',"New Year"},
 {D'1996.02.21',"Id Al Fitr [Est.]"},
@@ -16484,7 +16484,7 @@
 {D'2030.08.17',"Independence Day"},
 {D'2030.11.23',"Lailat Al Miraj [Estimated]"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "IEP", {
 {D'2008.12.25',"Christmas"},
 {D'2008.12.26',"Christmas"},
@@ -16510,7 +16510,7 @@
 {D'2012.04.06',"Good Friday"},
 {D'2012.04.09',"Easter Monday"},
 {D'2012.05.01',"Labour Day"},
-}
+},
 "ILS", {
 {D'1996.02.05',"Arbor Day"},
 {D'1996.03.05',"Feast of Lots"},
@@ -16942,7 +16942,7 @@
 {D'2030.10.07',"Yom Kippur"},
 {D'2030.10.12',"Sukkot"},
 {D'2030.10.19',"Simchat Torah"},
-}
+},
 "INR", {
 {D'1996.01.26',"Republic Day"},
 {D'1996.02.21',"Id ul Fitr"},
@@ -17290,7 +17290,7 @@
 {D'2012.10.26',"Bakri ID (Id-Ul-Zua)"},
 {D'2012.11.13',"Diwali [Estimated]"},
 {D'2012.11.14',"Diwali Balipratipada"},
-{D'2012.11.25',""Moharum, Estimated""},
+{D'2012.11.25',"Moharum, Estimated"},
 {D'2012.11.28',"Guru Nanak Jayanti"},
 {D'2012.12.25',"Christmas"},
 {D'2013.01.25',"Id-E-Milad"},
@@ -17360,7 +17360,7 @@
 {D'2015.09.25',"Bakri Id"},
 {D'2015.10.02',"Gandi's Birthday"},
 {D'2015.10.22',"Dasera [Estimated]"},
-{D'2015.10.24',""Moharum, Estimated""},
+{D'2015.10.24',"Moharum, Estimated"},
 {D'2015.11.11',"Diwali [Estimated]"},
 {D'2015.11.12',"Diwali (Balipratipada)"},
 {D'2015.11.25',"Guru Nanak Jayanti"},
@@ -17385,7 +17385,7 @@
 {D'2016.09.13',"Bakri id"},
 {D'2016.10.02',"Gandi's Birthday"},
 {D'2016.10.11',"Dasera [Estimated]"},
-{D'2016.10.12',""Moharum, Estimated""},
+{D'2016.10.12',"Moharum, Estimated"},
 {D'2016.10.31',"Mon after Diwali [Estimated]"},
 {D'2016.11.14',"Guru Nanak Jayanti"},
 {D'2016.12.12',"Prophet's B'day [Estimated]"},
@@ -17409,7 +17409,7 @@
 {D'2017.08.25',"Ganesh Chaturthi [Estimated]"},
 {D'2017.09.02',"Bakri id [Estimated]"},
 {D'2017.09.30',"Bank Holiday"},
-{D'2017.10.01',""Moharum, Estimated""},
+{D'2017.10.01',"Moharum, Estimated"},
 {D'2017.10.02',"Gandi's Birthday"},
 {D'2017.10.19',"Diwali [Estimated]"},
 {D'2017.10.20',"DIWALI (BALIPRATIPADA)"},
@@ -17459,7 +17459,7 @@
 {D'2019.08.15',"Independence Day"},
 {D'2019.08.17',"Parsi New Year"},
 {D'2019.09.02',"Ganesh Chaturthi [Estimated]"},
-{D'2019.09.10',""Moharum, Estimated""},
+{D'2019.09.10',"Moharum, Estimated"},
 {D'2019.10.02',"Gandi's Birthday"},
 {D'2019.10.08',"Dasera [Estimated]"},
 {D'2019.10.21',"Maharashtra Legislative Assembly Electio"},
@@ -17485,7 +17485,7 @@
 {D'2020.08.15',"Independence Day"},
 {D'2020.08.16',"Parsi New Year"},
 {D'2020.08.22',"Ganesh Chaturthi [Estimated]"},
-{D'2020.08.30',""Moharum, Estimated""},
+{D'2020.08.30',"Moharum, Estimated"},
 {D'2020.10.02',"Gandi's Birthday"},
 {D'2020.10.25',"Dasera [Estimated]"},
 {D'2020.10.30',"EID E MILAD"},
@@ -17531,7 +17531,7 @@
 {D'2022.05.03',"Ramazin Id [Estimated]"},
 {D'2022.05.16',"Buddha Purnima [Estimated]"},
 {D'2022.07.10',"Bakri id [Estimated]"},
-{D'2022.08.09',""Moharum, Estimated""},
+{D'2022.08.09',"Moharum, Estimated"},
 {D'2022.08.15',"Independence Day"},
 {D'2022.08.17',"Parsi New Year"},
 {D'2022.08.31',"Ganesh Chaturthi [Estimated]"},
@@ -17556,7 +17556,7 @@
 {D'2023.05.01',"May Day"},
 {D'2023.05.05',"Buddha Purnima [Estimated]"},
 {D'2023.06.29',"Bakri id [Estimated]"},
-{D'2023.07.29',""Moharum, Estimated""},
+{D'2023.07.29',"Moharum, Estimated"},
 {D'2023.08.15',"Independence Day"},
 {D'2023.08.17',"Parsi New Year"},
 {D'2023.09.19',"Ganesh Chaturthi [Estimated]"},
@@ -17581,7 +17581,7 @@
 {D'2024.05.01',"May Day"},
 {D'2024.05.23',"Buddha Purnima [Estimated]"},
 {D'2024.06.17',"Bakri id [Estimated]"},
-{D'2024.07.17',""Moharum, Estimated""},
+{D'2024.07.17',"Moharum, Estimated"},
 {D'2024.08.15',"Independence Day"},
 {D'2024.08.17',"Parsi New Year"},
 {D'2024.09.07',"Ganesh Chaturthi [Estimated]"},
@@ -17606,7 +17606,7 @@
 {D'2025.05.01',"May Day"},
 {D'2025.05.12',"Buddha Purnima [Estimated]"},
 {D'2025.06.07',"Bakri id [Estimated]"},
-{D'2025.07.06',""Moharum, Estimated""},
+{D'2025.07.06',"Moharum, Estimated"},
 {D'2025.08.15',"Independence Day"},
 {D'2025.08.17',"Parsi New Year"},
 {D'2025.08.27',"Ganesh Chaturthi [Estimated]"},
@@ -17629,7 +17629,7 @@
 {D'2026.04.14',"Dr Ambedka"},
 {D'2026.05.01',"May Day"},
 {D'2026.05.28',"Bakri id [Estimated]"},
-{D'2026.06.26',""Moharum, Estimated""},
+{D'2026.06.26',"Moharum, Estimated"},
 {D'2026.08.15',"Independence Day"},
 {D'2026.08.17',"Parsi New Year"},
 {D'2026.08.26',"Prophet's B'day [Estimated]"},
@@ -17654,7 +17654,7 @@
 {D'2027.05.01',"May Day"},
 {D'2027.05.17',"Bakri id [Estimated]"},
 {D'2027.05.20',"Buddha Purnima [Estimated]"},
-{D'2027.06.16',""Moharum, Estimated""},
+{D'2027.06.16',"Moharum, Estimated"},
 {D'2027.08.15',"Independence Day"},
 {D'2027.08.17',"Parsi New Year"},
 {D'2027.09.04',"Ganesh Chaturthi [Estimated]"},
@@ -17677,7 +17677,7 @@
 {D'2028.05.01',"May Day"},
 {D'2028.05.06',"Bakri id [Estimated]"},
 {D'2028.05.08',"Buddha Purnima [Estimated]"},
-{D'2028.06.04',""Moharum, Estimated""},
+{D'2028.06.04',"Moharum, Estimated"},
 {D'2028.08.03',"Prophet's B'day [Estimated]"},
 {D'2028.08.15',"Independence Day"},
 {D'2028.08.17',"Parsi New Year"},
@@ -17700,7 +17700,7 @@
 {D'2029.04.25',"Bakri id [Estimated]"},
 {D'2029.04.26',"Mahavir Jayanti [Estimated]"},
 {D'2029.05.01',"May Day"},
-{D'2029.05.24',""Moharum, Estimated""},
+{D'2029.05.24',"Moharum, Estimated"},
 {D'2029.05.27',"Buddha Purnima [Estimated]"},
 {D'2029.07.24',"Prophet's B'day [Estimated]"},
 {D'2029.08.15',"Independence Day"},
@@ -17724,7 +17724,7 @@
 {D'2030.04.16',"Mahavir Jayanti [Estimated]"},
 {D'2030.04.19',"Good Friday"},
 {D'2030.05.01',"May Day"},
-{D'2030.05.13',""Moharum, Estimated""},
+{D'2030.05.13',"Moharum, Estimated"},
 {D'2030.05.17',"Buddha Purnima [Estimated]"},
 {D'2030.06.30',"Prophet's B'day [Estimated]"},
 {D'2030.08.15',"Independence Day"},
@@ -17736,7 +17736,7 @@
 {D'2030.10.27',"Diwali Balipratipada [Est.]"},
 {D'2030.11.10',"Guru Nanak Jayanti"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "IQD", {
 {D'2018.08.24',"Eid Al Adha [Estimated]"},
 {D'2018.08.25',"Eid Al Adha [Estimated]"},
@@ -17948,7 +17948,7 @@
 {D'2030.07.14',"July Revolution"},
 {D'2030.12.10',"Victory over Daesh"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "IRR", {
 {D'2018.08.30',"Eid e Ghadir [Estimated]"},
 {D'2018.09.19',"Tasoua Hosseini [Estimated]"},
@@ -18267,7 +18267,7 @@
 {D'2030.11.09',"Sat after Imam Ali [Estimated]"},
 {D'2030.11.23',"Sat after Prophet's Ascension [Est]"},
 {D'2030.12.11',"Imam Mahdi [Estimated]"},
-}
+},
 "ISK", {
 {D'2004.04.08',"Maundy Thursday"},
 {D'2004.04.12',"Easter Monday"},
@@ -18627,7 +18627,7 @@
 {D'2030.12.24',"Christmas Eve"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "ITL", {
 {D'2008.12.25',"Christmas"},
 {D'2008.12.26',"Christmas"},
@@ -18653,7 +18653,7 @@
 {D'2012.04.06',"Good Friday"},
 {D'2012.04.09',"Easter Monday"},
 {D'2012.05.01',"Labour Day"},
-}
+},
 "JMD", {
 {D'2007.04.06',"Good Friday"},
 {D'2007.04.09',"Easter Monday"},
@@ -18893,7 +18893,7 @@
 {D'2030.10.21',"National Heroes' Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "JOD", {
 {D'2004.11.14',"Eid al Fitr estimated"},
 {D'2004.11.15',"Eid al Fitr estimated"},
@@ -19285,7 +19285,7 @@
 {D'2030.05.26',"Sun after Independence Day"},
 {D'2030.07.13',"Mawlid An Nabi [Estimated]"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "JPY", {
 {D'1996.01.01',"New Year"},
 {D'1996.01.02',"New Year"},
@@ -19937,7 +19937,7 @@
 {D'2030.11.04',"Mon after Culture Day"},
 {D'2030.11.23',"Labour Thanksgiving Day"},
 {D'2030.12.31',"New Year's Eve"},
-}
+},
 "KES", {
 {D'2007.04.06',"Good Friday"},
 {D'2007.04.09',"Easter Monday"},
@@ -20213,7 +20213,7 @@
 {D'2030.12.12',"Independence Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "KGS", {
 {D'2018.08.31',"Independence Day"},
 {D'2018.11.07',"Days of History and Memory"},
@@ -20415,7 +20415,7 @@
 {D'2030.09.02',"Mon after Independence Day"},
 {D'2030.11.07',"Days of History and Memory"},
 {D'2030.11.08',"Days of History and Memory"},
-}
+},
 "KHR", {
 {D'2018.09.24',"Constitutional Day"},
 {D'2018.10.08',"Pchum Ben Day [Estimated]"},
@@ -20694,7 +20694,7 @@
 {D'2030.11.09',"Water Festival [Estimated]"},
 {D'2030.11.11',"Water Festival [Estimated]"},
 {D'2030.11.12',"Independence Day [Transfer]"},
-}
+},
 "KRW", {
 {D'1996.01.01',"New Year"},
 {D'1996.01.02',"New Year"},
@@ -21261,7 +21261,7 @@
 {D'2030.10.03',"National Foundation Day"},
 {D'2030.10.09',"Hangul Day"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "KWD", {
 {D'1996.01.01',"New Year"},
 {D'1996.02.20',"Eid Al Fitr [estimated]"},
@@ -21768,7 +21768,7 @@
 {D'2030.05.03',"Hijri New Year [Estimated]"},
 {D'2030.07.13',"Mawlid An Nabi [Estimated]"},
 {D'2030.11.23',"Lailat Al Miraj [Estimated]"},
-}
+},
 "KYD", {
 {D'2007.04.06',"Good Friday"},
 {D'2007.04.09',"Easter Monday"},
@@ -22032,7 +22032,7 @@
 {D'2030.11.11',"Remembrance Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "KZT", {
 {D'1996.01.01',"Holiday"},
 {D'1996.01.02',"Holiday"},
@@ -22534,7 +22534,7 @@
 {D'2030.12.02',"Mon after Day of First President"},
 {D'2030.12.16',"Independence Day"},
 {D'2030.12.17',"Independence Day"},
-}
+},
 "LAK", {
 {D'2018.10.08',"Mon after BOL Foundation Day"},
 {D'2018.10.25',"Boat Racing Festival [Est.]"},
@@ -22695,7 +22695,7 @@
 {D'2030.10.14',"Mon after Boat Racing Festival [Est.]"},
 {D'2030.11.11',"Mon after That Luang Festival [Est.]"},
 {D'2030.12.02',"Lao National Day"},
-}
+},
 "LBP", {
 {D'2004.11.01',"All Saints' Day"},
 {D'2004.11.15',"El Eid estimated"},
@@ -23214,7 +23214,7 @@
 {D'2030.08.15',"Virgin Mary Day"},
 {D'2030.11.22',"Independence Day"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "LKR", {
 {D'1996.02.04',"Holiday"},
 {D'1996.02.19',"Holiday"},
@@ -23245,8 +23245,8 @@
 {D'1997.02.10',"Holiday"},
 {D'1997.03.28',"Holiday"},
 {D'1997.04.03',"Holiday"},
-{D'1997.04.13',""Sinhala, Tamil N.Yr. Eve""},
-{D'1997.04.14',""Sinhala, Tamil N.Yr.""},
+{D'1997.04.13',"Sinhala, Tamil N.Yr. Eve"},
+{D'1997.04.14',"Sinhala, Tamil N.Yr."},
 {D'1997.04.22',"Bak Full Moon Poya"},
 {D'1997.05.01',"May Day"},
 {D'1997.05.21',"Vesak Full Moon Poya"},
@@ -24054,7 +24054,7 @@
 {D'2030.11.09',"Il Poya [Estimated]"},
 {D'2030.12.09',"Uduvap Poya [Estimated]"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "LSL", {
 {D'2010.05.01',"Labour Day"},
 {D'2010.05.13',"Ascension"},
@@ -24281,7 +24281,7 @@
 {D'2030.10.04',"Independence Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "LTL", {
 {D'2006.08.15',"Assumption"},
 {D'2006.11.01',"All Saints' Day"},
@@ -24405,7 +24405,7 @@
 {D'2017.12.25',"Christmas"},
 {D'2017.12.26',"Christmas"},
 {D'2018.01.01',"New Year"},
-}
+},
 "LVL", {
 {D'2004.04.09',"Good Friday"},
 {D'2004.04.12',"Easter Monday"},
@@ -24577,7 +24577,7 @@
 {D'2017.12.26',"Boxing Day"},
 {D'2017.12.31',"New Year's Eve"},
 {D'2018.01.01',"New Year"},
-}
+},
 "LYD", {
 {D'2011.08.30',"Eid Al Fitr [Estimated]"},
 {D'2011.09.01',"National Day"},
@@ -24856,7 +24856,7 @@
 {D'2030.09.16',"Martyrs' Day"},
 {D'2030.10.23',"Liberation Day"},
 {D'2030.12.24',"Independence Day"},
-}
+},
 "MAD", {
 {D'2004.11.06',"Green March"},
 {D'2004.11.14',"Eid al Fitr estimated"},
@@ -25278,7 +25278,7 @@
 {D'2030.08.21',"Youth Day"},
 {D'2030.11.06',"Green March"},
 {D'2030.11.18',"Independence Day"},
-}
+},
 "MDL", {
 {D'2018.08.27',"Independence Day"},
 {D'2018.08.31',"National Language Day"},
@@ -25473,7 +25473,7 @@
 {D'2030.08.31',"National Language Day"},
 {D'2030.10.14',"Chisinau Day"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "MGA", {
 {D'2008.03.21',"Good Friday"},
 {D'2008.03.24',"Easter Monday"},
@@ -25736,7 +25736,7 @@
 {D'2030.08.15',"Assumption"},
 {D'2030.11.01',"All Saints' Day"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "MGF", {
 {D'2004.11.01',"All Saints' Day"},
 {D'2004.12.30',"Ann. of the Republic"},
@@ -25763,7 +25763,7 @@
 {D'2007.12.25',"Christmas"},
 {D'2007.12.30',"Ann. of the Republic"},
 {D'2008.01.01',"New Year"},
-}
+},
 "MMK", {
 {D'2015.07.19',"Martyr's Day"},
 {D'2015.07.31',"Full Moon Day of Waso"},
@@ -26187,7 +26187,7 @@
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Kayin New Year Day [Transfer]"},
 {D'2030.12.31',"New Year Holiday"},
-}
+},
 "MNT", {
 {D'2011.07.13',"Naadam"},
 {D'2011.11.26',"Independence Day"},
@@ -26451,7 +26451,7 @@
 {D'2030.07.15',"Naadam"},
 {D'2030.11.26',"Ghengis Khan Day [Estimated]"},
 {D'2030.12.29',"Independence Day"},
-}
+},
 "MUR", {
 {D'2004.11.02',"Indentured Labourers"},
 {D'2004.11.12',"Deepavali"},
@@ -26838,7 +26838,7 @@
 {D'2030.10.26',"Diwali [Estimated]"},
 {D'2030.11.02',"Indentured Labourers"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "MWK", {
 {D'2010.05.03',"Mon after Labour Day"},
 {D'2010.05.14',"Dr. Kamuzu Banda's Birthday"},
@@ -27091,7 +27091,7 @@
 {D'2030.10.15',"Mother's Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "MXN", {
 {D'1996.01.01',"New Year"},
 {D'1996.02.05',"Constitution Day"},
@@ -27759,7 +27759,7 @@
 {D'2030.11.28',"US Thanksgiving"},
 {D'2030.12.12',"Virgin of Guadalupe"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "MYR", {
 {D'1996.02.01',"February Holiday"},
 {D'1996.02.19',"Chinese New Year"},
@@ -28345,7 +28345,7 @@
 {D'2030.09.16',"Malaysia Day"},
 {D'2030.10.26',"Deepavali"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "MZN", {
 {D'2010.04.07',"Women's Day"},
 {D'2010.05.01',"Labour Day"},
@@ -28553,7 +28553,7 @@
 {D'2030.10.04',"Peace and Reconciliation"},
 {D'2030.11.11',"Mon after Maputo Day"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "NAD", {
 {D'2007.04.06',"Good Friday"},
 {D'2007.04.09',"Easter Monday"},
@@ -28840,7 +28840,7 @@
 {D'2030.12.10',"Human Rights Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Family Day"},
-}
+},
 "NDF", {
 {D'2008.11.11',"Veterans Day"},
 {D'2008.11.27',"Thanksgiving Day"},
@@ -29064,7 +29064,7 @@
 {D'2030.11.11',"Veterans Day"},
 {D'2030.11.28',"Thanksgiving Day"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "NGN", {
 {D'2007.04.06',"Good Friday"},
 {D'2007.04.09',"Easter Monday"},
@@ -29373,7 +29373,7 @@
 {D'2030.10.01',"National Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Boxing Day"},
-}
+},
 "NLG", {
 {D'2008.12.25',"Christmas"},
 {D'2008.12.26',"Christmas"},
@@ -29399,7 +29399,7 @@
 {D'2012.04.06',"Good Friday"},
 {D'2012.04.09',"Easter Monday"},
 {D'2012.05.01',"Labour Day"},
-}
+},
 "NOK", {
 {D'1996.01.01',"New Year"},
 {D'1996.04.04',"Maundy Thursday"},
@@ -29776,7 +29776,7 @@
 {D'2030.12.24',"Christmas Eve"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Boxing Day"},
-}
+},
 "NPR", {
 {D'2013.08.08',"Eid Al Fitr [Estimated]"},
 {D'2013.08.21',"Janai Purmina"},
@@ -30270,7 +30270,7 @@
 {D'2030.11.10',"Guru Nanak Jayanti"},
 {D'2030.11.11',"Phalgunanda Jayanti[Est.]"},
 {D'2030.12.03',"Int. Disability Day"},
-}
+},
 "NZD", {
 {D'1996.01.01',"New Year"},
 {D'1996.01.02',"New Year"},
@@ -30691,7 +30691,7 @@
 {D'2030.10.28',"Labour Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "OMR", {
 {D'2004.11.14',"Eid al Fitr estimated"},
 {D'2004.11.15',"Eid al Fitr estimated"},
@@ -31040,7 +31040,7 @@
 {D'2030.11.18',"National Day [Estimated]"},
 {D'2030.11.19',"National Day [Estimated]"},
 {D'2030.11.23',"Lailat Al Miraj [Estimated]"},
-}
+},
 "PEN", {
 {D'1996.01.01',"New Year"},
 {D'1996.04.04',"Maundy Thursday"},
@@ -31458,7 +31458,7 @@
 {D'2030.11.01',"All Saints' Day"},
 {D'2030.12.08',"Immaculate Conception"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "PHP", {
 {D'1996.01.01',"New Year"},
 {D'1996.04.04',"Maundy Thursday"},
@@ -32059,7 +32059,7 @@
 {D'2030.12.25',"Christmas"},
 {D'2030.12.30',"Rizal Day"},
 {D'2030.12.31',"Last Day of the year"},
-}
+},
 "PKR", {
 {D'1996.02.16',"Juma tul Wida [estimated]"},
 {D'1996.02.21',"Eid ul Fitr [estimated]"},
@@ -32616,7 +32616,7 @@
 {D'2030.07.14',"Mawlid An Nabi [Estimated]"},
 {D'2030.08.14',"Independence Day"},
 {D'2030.12.25',"Birthday of Quaid i Azam"},
-}
+},
 "PLN", {
 {D'1996.08.15',"Assumption"},
 {D'1996.11.01',"All Saints' Day"},
@@ -32984,7 +32984,7 @@
 {D'2030.11.11',"Independence Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "PTE", {
 {D'2008.12.25',"Christmas"},
 {D'2008.12.26',"Christmas"},
@@ -33010,7 +33010,7 @@
 {D'2012.04.06',"Good Friday"},
 {D'2012.04.09',"Easter Monday"},
 {D'2012.05.01',"Labour Day"},
-}
+},
 "QAR", {
 {D'2004.11.14',"Eid al Fitr estimated"},
 {D'2004.11.15',"Eid al Fitr estimated"},
@@ -33322,7 +33322,7 @@
 {D'2030.04.15',"Id Al Adha [Estimated]"},
 {D'2030.12.18',"National Day"},
 {D'2030.12.19',"National Day [Estimated]"},
-}
+},
 "ROL", {
 {D'2002.05.01',"May Day"},
 {D'2002.05.06',"Orthodox Easter Mon"},
@@ -33347,7 +33347,7 @@
 {D'2005.01.02',"New Year"},
 {D'2005.05.01',"May Day"},
 {D'2005.05.02',"Orthodox Easter Mon"},
-}
+},
 "RON", {
 {D'2005.12.01',"National Day"},
 {D'2005.12.25',"Christmas"},
@@ -33631,7 +33631,7 @@
 {D'2030.12.01',"National Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "RSD", {
 {D'2008.02.15',"National Day"},
 {D'2008.04.25',"Orthodox Good Fri"},
@@ -33847,7 +33847,7 @@
 {D'2030.05.01',"May Day"},
 {D'2030.05.02',"May Day"},
 {D'2030.11.11',"Armistice Day"},
-}
+},
 "RUB", {
 {D'1998.08.24',"Mon after National Flag Day"},
 {D'1998.11.09',"Mon after National Accord Day"},
@@ -34287,7 +34287,7 @@
 {D'2030.05.10',"Victory Day [Bridge]"},
 {D'2030.06.12',"Russia Day"},
 {D'2030.11.04',"Day of National Unity"},
-}
+},
 "RWF", {
 {D'2011.08.15',"Assumption"},
 {D'2011.08.30',"Eid Al Fitr [Estimated]"},
@@ -34561,7 +34561,7 @@
 {D'2030.08.15',"Assumption"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Boxing Day"},
-}
+},
 "SAR", {
 {D'1996.02.20',"Eid Al Fitr [estimated]"},
 {D'1996.02.21',"Eid Al Fitr [estimated]"},
@@ -35065,7 +35065,7 @@
 {D'2030.04.15',"Eid Al Adha [Estimated]"},
 {D'2030.04.16',"Eid Al Adha [Estimated]"},
 {D'2030.09.23',"National Day"},
-}
+},
 "SCR", {
 {D'2007.04.06',"Good Friday"},
 {D'2007.05.01',"Labour Day"},
@@ -35351,7 +35351,7 @@
 {D'2030.11.01',"All Saints' Day"},
 {D'2030.12.09',"Mon after Immaculate Conception"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "SEK", {
 {D'1996.01.01',"New Year"},
 {D'1996.01.06',"Epiphany"},
@@ -35772,7 +35772,7 @@
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Boxing Day"},
 {D'2030.12.31',"New Year's Eve"},
-}
+},
 "SGD", {
 {D'1996.01.01',"New Year"},
 {D'1996.02.19',"Chinese New Year [Est.]"},
@@ -36161,7 +36161,7 @@
 {D'2030.08.09',"National Day"},
 {D'2030.10.26',"Deepavali [Estimated]"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "SIT", {
 {D'2008.06.25',"National Day"},
 {D'2008.08.15',"Assumption"},
@@ -36227,7 +36227,7 @@
 {D'2017.12.25',"Christmas"},
 {D'2017.12.26',"Christmas"},
 {D'2018.01.01',"New Year"},
-}
+},
 "SKK", {
 {D'1999.07.05',"CYRIL AND METHODIU"},
 {D'1999.09.01',"CONSTITUTION DAY"},
@@ -36423,7 +36423,7 @@
 {D'2012.12.24',"Christmas Eve"},
 {D'2012.12.25',"Christmas"},
 {D'2012.12.26',"Christmas"},
-}
+},
 "SLL", {
 {D'2019.04.19',"Good Friday"},
 {D'2019.04.22',"Easter Monday"},
@@ -36554,7 +36554,7 @@
 {D'2030.07.13',"Moulid Ul Nabi [Estimated]"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Boxing Day"},
-}
+},
 "SSP", {
 {D'2018.12.24',"Christmas Holiday"},
 {D'2018.12.25',"Christmas Holiday"},
@@ -36725,7 +36725,7 @@
 {D'2030.12.24',"Christmas Holiday"},
 {D'2030.12.25',"Christmas Holiday"},
 {D'2030.12.26',"Christmas Holiday"},
-}
+},
 "SZL", {
 {D'2010.04.19',"King's Birthday"},
 {D'2010.04.26',"Mon after National Flag Day"},
@@ -36995,7 +36995,7 @@
 {D'2030.12.12',"Incwala Dance [Estimated]"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "THB", {
 {D'1996.01.01',"New Year"},
 {D'1996.04.06',"Chakri Memorial Day"},
@@ -37561,7 +37561,7 @@
 {D'2030.12.05',"Father's Day"},
 {D'2030.12.10',"Constitution Day"},
 {D'2030.12.31',"New Year's Eve"},
-}
+},
 "TJS", {
 {D'2018.09.10',"Mon after Independence Day"},
 {D'2018.11.06',"Constitution Day"},
@@ -37721,7 +37721,7 @@
 {D'2030.06.27',"Day of National Unity"},
 {D'2030.09.09',"Independence Day"},
 {D'2030.11.06',"Constitution Day"},
-}
+},
 "TMT", {
 {D'2018.08.24',"Kurban Bayramy"},
 {D'2018.09.27',"Independence Day"},
@@ -37870,7 +37870,7 @@
 {D'2030.09.27',"Independence Day"},
 {D'2030.10.07',"Mon after Earthquake Remembrance"},
 {D'2030.12.12',"Int. Neutrality Day"},
-}
+},
 "TND", {
 {D'2004.11.07',"New Era Day"},
 {D'2004.11.14',"Eid al Fitr estimated"},
@@ -38258,7 +38258,7 @@
 {D'2030.07.25',"Republic Day"},
 {D'2030.08.13',"Women's Day"},
 {D'2030.10.15',"Evacuation Day"},
-}
+},
 "TRL", {
 {D'1996.01.01',"New Year"},
 {D'1996.02.20',"Feast of Ramazan"},
@@ -38428,7 +38428,7 @@
 {D'2013.10.18',"Feast of Sacrifice"},
 {D'2015.07.17',"Feast of Ramazan"},
 {D'2015.09.23',"Sacrifice Feast"},
-}
+},
 "TRY", {
 {D'2004.10.29',"Republic Holiday"},
 {D'2004.11.15',"Feast of Ramazan estimated"},
@@ -38780,7 +38780,7 @@
 {D'2030.07.15',"Unity Day"},
 {D'2030.08.30',"Victory Day"},
 {D'2030.10.29',"Republic Holiday"},
-}
+},
 "TTD", {
 {D'2007.04.06',"Good Friday"},
 {D'2007.04.09',"Easter Monday"},
@@ -39153,7 +39153,7 @@
 {D'2030.10.26',"Deepavali [Estimated]"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
 "TWD", {
 {D'1996.01.01',"New Year"},
 {D'1996.02.19',"Chinese New Year"},
@@ -39641,7 +39641,7 @@
 {D'2030.09.13',"Mid Autumn Festival [Bridge]"},
 {D'2030.10.10',"Double Ten National Day"},
 {D'2030.10.11',"Double Ten National Day [Bridge]"},
-}
+},
 "TZS", {
 {D'2011.04.07',"Karume Day"},
 {D'2011.04.22',"Good Friday"},
@@ -39979,7 +39979,7 @@
 {D'2030.12.09',"Independence Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Boxing Day"},
-}
+},
 "UAH", {
 {D'1997.01.01',"Holiday"},
 {D'1997.01.07',"Holiday"},
@@ -40429,7 +40429,7 @@
 {D'2030.12.25',"Christmas"},
 {D'2030.12.30',"New Year's Eve [Bridge]"},
 {D'2030.12.31',"New Year's Eve"},
-}
+},
 "UGX", {
 {D'2011.03.08',"Womens Day"},
 {D'2011.04.22',"Good Friday"},
@@ -40710,7 +40710,7 @@
 {D'2030.10.09',"Independence Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Boxing Day"},
-}
+},
 "USD", {
 {D'1996.01.01',"New Year"},
 {D'1996.01.15',"Martin Luther King's Day"},
@@ -41059,7 +41059,7 @@
 {D'2030.11.11',"Veterans Day"},
 {D'2030.11.28',"Thanksgiving Day"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "UYU", {
 {D'1996.01.01',"New Year"},
 {D'1996.01.06',"Epiphany"},
@@ -41572,7 +41572,7 @@
 {D'2030.10.12',"Battle of Saradi"},
 {D'2030.11.02',"All Souls' Day"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "UZS", {
 {D'2018.08.24',"Eid Al Adha [Estimated]"},
 {D'2018.08.31',"Fri before Independence Day"},
@@ -41697,7 +41697,7 @@
 {D'2030.09.02',"Mon after Independence Day"},
 {D'2030.10.01',"Teachers Day"},
 {D'2030.12.08',"Constitution Day"},
-}
+},
 "VEB", {
 {D'1996.01.01',"New Year"},
 {D'1996.02.19',"Carnival"},
@@ -41865,7 +41865,7 @@
 {D'2008.10.12',"Columbus Day"},
 {D'2008.12.25',"Christmas"},
 {D'2009.01.01',"New Year"},
-}
+},
 "VEF", {
 {D'2008.02.04',"Carnival"},
 {D'2008.02.05',"Carnival"},
@@ -41958,7 +41958,7 @@
 {D'2012.06.11',"Mon after Corpus Christi"},
 {D'2012.06.24',"Batalla de Carabobo"},
 {D'2012.07.02',"St. Peter & St. Paul Day"},
-}
+},
 "VND", {
 {D'1996.02.19',"Lunar New Year"},
 {D'1996.04.30',"Liberation of South Vietnam"},
@@ -42308,7 +42308,7 @@
 {D'2030.05.01',"May Day"},
 {D'2030.09.02',"National Day Holiday"},
 {D'2030.09.03',"National Day Holiday [Est.]"},
-}
+},
 "XAF", {
 {D'2011.08.15',"Assumption"},
 {D'2011.12.25',"Christmas"},
@@ -42492,7 +42492,7 @@
 {D'2030.05.30',"Ascension"},
 {D'2030.08.15',"Assumption"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "XCD", {
 {D'2007.04.06',"Good Friday"},
 {D'2007.04.09',"Easter Monday"},
@@ -42524,7 +42524,7 @@
 {D'2012.01.02',"Mon after New Year"},
 {D'2012.04.06',"Good Friday"},
 {D'2012.04.09',"Easter Monday"},
-}
+},
 "XOF", {
 {D'2011.08.30',"Korite [Estimated]"},
 {D'2011.11.06',"Tabaski [Estimated]"},
@@ -42783,7 +42783,7 @@
 {D'2030.11.01',"All Saints' Day"},
 {D'2030.11.15',"National Peace Day"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "ZAR", {
 {D'1996.01.01',"New Year"},
 {D'1996.03.21',"Human Rights Day"},
@@ -43215,7 +43215,7 @@
 {D'2030.12.16',"Day of Reconciliation"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Day of Good Will"},
-}
+},
 "ZMK", {
 {D'2010.05.03',"Mon after Labour Day"},
 {D'2010.05.25',"Africa Day"},
@@ -43289,7 +43289,7 @@
 {D'2016.03.12',"Youth Day"},
 {D'2016.03.25',"Good Friday"},
 {D'2016.03.28',"Easter Monday"},
-}
+},
 "ZMW", {
 {D'2013.07.01',"Heroes' Day"},
 {D'2013.07.02',"Unity Day"},
@@ -43517,7 +43517,7 @@
 {D'2030.10.18',"National Prayer Day"},
 {D'2030.10.24',"Independence Day"},
 {D'2030.12.25',"Christmas"},
-}
+},
 "ZWD", {
 {D'2007.04.06',"Good Friday"},
 {D'2007.04.09',"Easter Monday"},
@@ -43796,4 +43796,4 @@
 {D'2030.12.23',"Mon after Unity Day"},
 {D'2030.12.25',"Christmas"},
 {D'2030.12.26',"Christmas"},
-}
+},
