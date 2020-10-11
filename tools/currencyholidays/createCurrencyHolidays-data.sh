@@ -1,6 +1,6 @@
 #!/bin/sh
 for ccy in `cat currencies.txt`; do
-	echo "\"$ccy\", {"
+	echo "{ \"$ccy\", {"
 	for year in `cat years.txt`; do
 		filename=$ccy-$year.csv
 		if [ -f $filename ]; then
@@ -27,5 +27,5 @@ for ccy in `cat currencies.txt`; do
 			done <$filename
 		fi
 	done
-	echo "},"
+	echo "}},"
 done
