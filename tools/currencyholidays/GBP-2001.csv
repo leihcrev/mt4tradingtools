@@ -1,0 +1,9 @@
+Currency HolidaysCurrency= GBP,Year= 2001Year,Month,Day,Name
+2001,JAN,01,New Year
+2001,APR,13,Good Friday
+2001,APR,16,Easter Monday
+2001,MAY,07,May Day Bank Holiday
+2001,MAY,28,Spring Bank Holiday
+2001,AUG,27,August Bank Holiday
+2001,DEC,25,Christmas
+2001,DEC,26,Boxing Day

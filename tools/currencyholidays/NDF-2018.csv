@@ -1,0 +1,11 @@
+Currency HolidaysCurrency= NDF,Year= 2018Year,Month,Day,Name
+2018,JAN,01,New Year
+2018,JAN,15,Martin Luther King's Day
+2018,FEB,19,Washington Day
+2018,MAY,28,Memorial Day
+2018,JUL,04,Independence Day
+2018,SEP,03,Labor Day
+2018,OCT,08,Columbus Day
+2018,NOV,12,Mon after Veterans Day
+2018,NOV,22,Thanksgiving Day
+2018,DEC,25,Christmas

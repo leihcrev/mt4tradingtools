@@ -1,0 +1,11 @@
+Currency HolidaysCurrency= NDF,Year= 2020Year,Month,Day,Name
+2020,JAN,01,New Year
+2020,JAN,20,Martin Luther King's Day
+2020,FEB,17,Washington Day
+2020,MAY,25,Memorial Day
+2020,JUL,04,Independence Day
+2020,SEP,07,Labor Day
+2020,OCT,12,Columbus Day
+2020,NOV,11,Veterans Day
+2020,NOV,26,Thanksgiving Day
+2020,DEC,25,Christmas
